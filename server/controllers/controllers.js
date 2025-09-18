@@ -23,7 +23,7 @@ const getAllFamilies = async (req, res) => {
   }
 };
 
-// Get single Family (with members in a nested tree structure)
+// Get single Family with nested members
 const getFamily = async (req, res) => {
   try {
     const family = await Family.findById(req.params.id);
@@ -34,49 +34,35 @@ const getFamily = async (req, res) => {
     // 1. Fetch all members of the family
     const members = await Person.find({ family: family._id });
 
-    // Handle the case where there are no members
-    if (members.length === 0) {
-      return res.json({ name: family.familyName || "Family", children: [] });
-    }
-
-    // 2. Create a map for quick access and to build the nested structure
+    // 2. Create a map for quick access to members by their ID
     const memberMap = new Map();
     members.forEach((member) => {
-      // Create a full object from the mongoose document and add a children array
-      const memberObj = { ...member.toObject(), children: [] };
+      const memberObj = member.toObject();
+      memberObj.children = [];
       memberMap.set(memberObj._id.toString(), memberObj);
     });
 
-    // 3. Build the nested tree and identify the root members
+    // 3. Build the nested tree structure
     const rootMembers = [];
     memberMap.forEach((member) => {
-      // We will iterate through ALL parents to correctly link children
-      if (member.parents && member.parents.length > 0) {
-        member.parents.forEach((parentId) => {
+      let parents = member.parents || (member.parent ? [member.parent] : []);
+
+      // If a member has parents, find the parent in the map and add the member as a child
+      if (parents.length > 0) {
+        parents.forEach((parentId) => {
           const parent = memberMap.get(parentId.toString());
           if (parent) {
             parent.children.push(member);
           }
         });
       } else {
-        // This is a top-level member (a root)
+        // If a member has no parents, they are a root of the family tree
         rootMembers.push(member);
       }
     });
 
-    // 4. Create the final output in the desired simplified format
-    const formatTree = (node) => ({
-      name: node.name,
-      children: node.children.map(formatTree),
-    });
-
-    const finalTree = {
-      name: family.familyName || "Family",
-      children: rootMembers.map(formatTree),
-    };
-
-    // 5. Return the single, nested tree object
-    res.json(finalTree);
+    // 4. Return the family object with the nested member structure
+    res.json({ ...family.toObject(), members: rootMembers });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -115,12 +101,19 @@ const deleteFamily = async (req, res) => {
 // Create Person
 const createPerson = async (req, res) => {
   try {
-    const { name, gender, birthDate, deathDate, photo, bio, parent, family } =
-      req.body;
+    const {
+      name,
+      gender,
+      birthDate,
+      deathDate,
+      photo,
+      bio,
+      parentId,
+      familyId,
+    } = req.body;
 
-    // get parent and family obj from body
-    const parentObj = await Person.findOne({ name: parent });
-    const familyObj = await Family.findOne({ familyName: family });
+    // get parent obj from body
+    const parentObj = await Person.findById(parentId);
     // parent: single ObjectId (one parent)
     const person = new Person({
       name,
@@ -129,8 +122,8 @@ const createPerson = async (req, res) => {
       deathDate,
       photo,
       bio,
-      parent: parentObj ? [parentObj._id] : [],
-      family: familyObj._id,
+      parent: parentId ? [parentObj._id] : [],
+      family: familyId,
     });
     await person.save();
     res.status(201).json(person);
@@ -286,11 +279,14 @@ const login = async (req, res) => {
         .json({ ok: false, message: "Invalid user provided" });
 
     const match = bcrypt.compareSync(password, user.password);
-    console.log(email);
     if (match) {
-      const token = jwt.sign({ userEmail: user.email }, jwt_secret, {
-        expiresIn: "1h",
-      });
+      const token = jwt.sign(
+        { userEmail: user.email, familyId: user.family },
+        jwt_secret,
+        {
+          expiresIn: "1h",
+        },
+      );
       res.status(200).json({ ok: true, message: "welcome back", token, email });
     } else {
       return res
@@ -304,10 +300,9 @@ const login = async (req, res) => {
 
 const verify_token = (req, res) => {
   const token = req.headers.authorization;
-  console.log("verifying token:", token);
   jwt.verify(token, jwt_secret, (err, succ) => {
     err
-      ? res.status(400).json({ ok: false, message: err.message })
+      ? res.status(400).json({ ok: false, message: "Token is corrupted" })
       : res.status(200).json({ ok: true, succ });
   });
 };

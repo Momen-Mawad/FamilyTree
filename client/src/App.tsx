@@ -21,7 +21,10 @@ function App() {
     return storedUser ? JSON.parse(storedUser) : null;
   });
 
-  const token = localStorage.getItem("token") || null;
+  const [token, setToken] = useState(() => {
+    const storedToken = localStorage.getItem("token");
+    return storedToken ? JSON.parse(storedToken) : null;
+  });
 
   useEffect(() => {
     const verify_token = async () => {
@@ -46,10 +49,12 @@ function App() {
     // composing a user object based on what data we included in our token (login controller - jwt.sign() first argument)
     const user = {
       email: decodedToken.userEmail,
+      familyId: decodedToken.familyId,
     };
+    setToken(token);
     localStorage.setItem("token", JSON.stringify(token));
     localStorage.setItem("user", JSON.stringify(user));
-    setUser(user)
+    setUser(user);
     setIsLoggedIn(true);
   };
   

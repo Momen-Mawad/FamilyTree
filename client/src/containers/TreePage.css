@@ -1,0 +1,27 @@
+/* TreePage.css */
+
+/* Overall container for the page */
+.tree_page {
+  text-align: center;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background-color: #f4f7f9;
+  min-height: 100vh;
+}
+
+/* Style for the tree container */
+.tree_container {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  height: 70vh;
+  width: 90%;
+  margin: auto;
+}
+.node-title {
+  fill: green;
+}
+
+.node-label {
+}
