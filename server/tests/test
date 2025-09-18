@@ -1,0 +1,194 @@
+{
+  "info": {
+    "name": "FamilyTree API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "familytree-collection"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:4444",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Families",
+      "item": [
+        {
+          "name": "Create Family",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"familyName\": \"Smith\"\n}"
+            },
+            "url": "{{baseUrl}}/api/families"
+          }
+        },
+        {
+          "name": "Get All Families",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/families"
+          }
+        },
+        {
+          "name": "Get Family By Id",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/families/:id"
+          }
+        },
+        {
+          "name": "Update Family",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"familyName\": \"Johnson\"\n}"
+            },
+            "url": "{{baseUrl}}/api/families/:id"
+          }
+        },
+        {
+          "name": "Delete Family",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/families/:id"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Persons",
+      "item": [
+        {
+          "name": "Create Person",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"gender\": \"male\",\n  \"family\": \"<FAMILY_ID>\"\n}"
+            },
+            "url": "{{baseUrl}}/api/persons"
+          }
+        },
+        {
+          "name": "Get All Persons",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/persons"
+          }
+        },
+        {
+          "name": "Get Person By Id",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/persons/:id"
+          }
+        },
+        {
+          "name": "Update Person",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Jane Doe\",\n  \"gender\": \"female\",\n  \"family\": \"<FAMILY_ID>\"\n}"
+            },
+            "url": "{{baseUrl}}/api/persons/:id"
+          }
+        },
+        {
+          "name": "Delete Person",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/persons/:id"
+          }
+        }
+      ]
+    }
+    ,
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"pass123\",\n  \"password2\": \"pass123\",\n  \"family\": \"<FAMILY_ID>\"\n}"
+            },
+            "url": "{{baseUrl}}/api/register"
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"pass123\"\n}"
+            },
+            "url": "{{baseUrl}}/api/login"
+          }
+        },
+        {
+          "name": "Verify Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{authToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/verify_token"
+          }
+        }
+      ]
+    }
+  ]
+}
