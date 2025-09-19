@@ -34,7 +34,6 @@ function App() {
         } else {
           axios.defaults.headers.common["Authorization"] = token;
           const response = await axios.post(`${URL}/verify_token`);
-          console.log(response)
           return response.data.ok ? login(token) : logout();
         }
       } catch (error) {

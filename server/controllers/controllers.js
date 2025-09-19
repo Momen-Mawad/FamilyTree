@@ -42,21 +42,22 @@ const getFamily = async (req, res) => {
       memberMap.set(memberObj._id.toString(), memberObj);
     });
 
-    // 3. Build the nested tree structure
+    // 3. Build the nested tree structure (Second Pass)
     const rootMembers = [];
     memberMap.forEach((member) => {
-      let parents = member.parents || (member.parent ? [member.parent] : []);
-
-      // If a member has parents, find the parent in the map and add the member as a child
-      if (parents.length > 0) {
-        parents.forEach((parentId) => {
-          const parent = memberMap.get(parentId.toString());
-          if (parent) {
-            parent.children.push(member);
-          }
-        });
+      // If a member has a parent, find the parent in the map and add the member as a child
+      if (member.parent) {
+        const parent = memberMap.get(member.parent.toString());
+        // Make sure the parent exists in the map
+        if (parent) {
+          parent.children.push(member);
+        } else {
+          // This member's parent is not in the fetched list (e.g., they belong to another family)
+          // so we treat them as a root for this specific family tree
+          rootMembers.push(member);
+        }
       } else {
-        // If a member has no parents, they are a root of the family tree
+        // If a member has no parent, they are a root of the family tree
         rootMembers.push(member);
       }
     });
@@ -112,8 +113,8 @@ const createPerson = async (req, res) => {
       familyId,
     } = req.body;
 
-    // get parent obj from body
-    const parentObj = await Person.findById(parentId);
+    console.log(req.body);
+
     // parent: single ObjectId (one parent)
     const person = new Person({
       name,
@@ -122,7 +123,7 @@ const createPerson = async (req, res) => {
       deathDate,
       photo,
       bio,
-      parent: parentId ? [parentObj._id] : [],
+      parent: parentId ? parentId : null,
       family: familyId,
     });
     await person.save();
@@ -160,16 +161,17 @@ const getPerson = async (req, res) => {
 // Update Person
 const updatePerson = async (req, res) => {
   try {
-    const { name, gender, birthDate, deathDate, photo, bio, parent, family } =
-      req.body;
+    const {
+      name,
+      gender,
+      birthDate,
+      deathDate,
+      photo,
+      bio,
+      parentId,
+      familyId,
+    } = req.body;
 
-    // get parent and family obj from body
-    const familyObj = await Family.findOne({ familyName: family });
-    const parentObj = await Person.findOne({
-      name: parent,
-      family: familyObj._id,
-    });
-    console.log(req.body);
     const update = {
       name,
       gender,
@@ -177,9 +179,10 @@ const updatePerson = async (req, res) => {
       deathDate,
       photo,
       bio,
-      parent: parentObj ? [parentObj._id] : [],
-      family: familyObj._id,
+      parent: parentId ? parentId : null,
+      family: familyId,
     };
+
     const person = await Person.findByIdAndUpdate(req.params.id, update, {
       new: true,
     });
@@ -193,6 +196,7 @@ const updatePerson = async (req, res) => {
 // Delete Person
 const deletePerson = async (req, res) => {
   try {
+    console.log("id", req.params.id);
     const person = await Person.findByIdAndDelete(req.params.id);
     if (!person) return res.status(404).json({ error: "Person not found" });
     // Optionally, remove this person from any children's parents array
