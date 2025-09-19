@@ -4,7 +4,12 @@
   "description": "",
   "main": "index.js",
   "type": "commonjs",
+  "engines": {
+    "node": ">=24.x"
+  },
   "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
     "test": "jest --runInBand"
   },
   "author": "Momen Mawad",
