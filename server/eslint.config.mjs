@@ -1,14 +1,29 @@
-import js from "@eslint/js";
-import globals from "globals";
-import pluginReact from "eslint-plugin-react";
-import { defineConfig } from "eslint/config";
+import { configs } from "@eslint/js";
+import prettier from "eslint-config-prettier";
+import nodePlugin, { configs as _configs } from "eslint-plugin-node";
 
-export default defineConfig([
+export default [
+  // Base recommended rules from @eslint/js
+  configs.recommended,
+
+  // Node.js-specific rules
   {
-    files: ["**/*.{js,mjs,cjs,jsx}"],
-    plugins: { js },
-    extends: ["js/recommended"],
-    languageOptions: { globals: globals.browser },
+    plugins: {
+      node: nodePlugin,
+    },
+    rules: {
+      ..._configs.recommended.rules,
+      "node/no-unsupported-features/es-syntax": [
+        "error",
+        { ignores: ["modules"] },
+      ],
+    },
+    languageOptions: {
+      ecmaVersion: 2021,
+      sourceType: "commonjs",
+    },
   },
-  pluginReact.configs.flat.recommended,
-]);
+
+  // Prettier configuration to turn off conflicting rules
+  prettier,
+];

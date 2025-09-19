@@ -4,17 +4,23 @@ import Tree from "react-d3-tree";
 import type { RawNodeDatum } from "react-d3-tree";
 
 import { useCenteredTree } from "./helpers.tsx";
-import CustomNode from "./CustomNode"; // Import the separated component
+import CustomNode from "./CustomNode";
 
 interface FamilyTreeProps {
   treeData: RawNodeDatum[];
   setSelectedNode: (node: any) => void;
-  nodeSize: { x: number, y: number };
+  nodeSize: { x: number; y: number };
   setNewChildName: (name: string) => void;
   fetchFamilyTree: () => Promise<void>;
 }
 
-const FamilyTree: React.FC<FamilyTreeProps> = ({ treeData, setSelectedNode, nodeSize, setNewChildName, fetchFamilyTree }) => {
+const FamilyTree: React.FC<FamilyTreeProps> = ({
+  treeData,
+  setSelectedNode,
+  nodeSize,
+  setNewChildName,
+  fetchFamilyTree,
+}) => {
   const [translate, containerRef] = useCenteredTree();
 
   return (
@@ -28,7 +34,12 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({ treeData, setSelectedNode, node
         separation={{ siblings: 1 }}
         depthFactor={200}
         renderCustomNodeElement={(rd3tProps) => (
-          <CustomNode {...rd3tProps} setSelectedNode={setSelectedNode} setNewChildName={setNewChildName} fetchFamilyTree={fetchFamilyTree} />
+          <CustomNode
+            {...rd3tProps}
+            setSelectedNode={setSelectedNode}
+            setNewChildName={setNewChildName}
+            fetchFamilyTree={fetchFamilyTree}
+          />
         )}
       />
     </div>

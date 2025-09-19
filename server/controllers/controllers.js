@@ -7,6 +7,7 @@ const createFamily = async (req, res) => {
     const { familyName } = req.body;
     const family = new Family({ familyName });
     await family.save();
+
     res.status(201).json(family);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -76,7 +77,7 @@ const updateFamily = async (req, res) => {
     const family = await Family.findByIdAndUpdate(
       req.params.id,
       { familyName },
-      { new: true },
+      { new: true }
     );
     if (!family) return res.status(404).json({ error: "Family not found" });
     res.json(family);
@@ -202,7 +203,7 @@ const deletePerson = async (req, res) => {
     // Optionally, remove this person from any children's parents array
     await Person.updateMany(
       { parent: person._id },
-      { $pull: { parent: person._id } },
+      { $pull: { parent: person._id } }
     );
     res.json({ message: "Person deleted" });
   } catch (error) {
@@ -246,6 +247,19 @@ const register = async (req, res) => {
     const familyDoc = new Family({ familyName: family });
     await familyDoc.save();
 
+    // create a root Person whose name is the family name
+    const rootPerson = new Person({
+      name: family,
+      gender: null,
+      birthDate: null,
+      deathDate: null,
+      photo: null,
+      bio: `Root member for family ${family}`,
+      parent: null,
+      family: familyDoc._id,
+    });
+    await rootPerson.save();
+
     const newUser = {
       email,
       password: hash,
@@ -258,11 +272,7 @@ const register = async (req, res) => {
     res.status(500).json({ ok: false, error });
   }
 };
-// the client is sending this body object
-//  {
-//     email: form.email,
-//     password: form.password
-//  }
+
 const login = async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
@@ -289,7 +299,7 @@ const login = async (req, res) => {
         jwt_secret,
         {
           expiresIn: "1h",
-        },
+        }
       );
       res.status(200).json({ ok: true, message: "welcome back", token, email });
     } else {
