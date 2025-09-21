@@ -3,7 +3,7 @@ import React from "react";
 import Tree from "react-d3-tree";
 import type { RawNodeDatum } from "react-d3-tree";
 
-import { useCenteredTree } from "./helpers.tsx";
+import { useCenteredTree } from "../helpers.tsx";
 import CustomNode from "./CustomNode";
 
 interface FamilyTreeProps {

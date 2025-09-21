@@ -1,7 +1,7 @@
 // TreePage.tsx
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { URL } from "../config.js";
+import { URL } from "../../config.js";
 import axios from "axios";
 import "./TreePage.css";
 import FamilyTree from "./FamilyTree";

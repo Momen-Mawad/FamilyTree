@@ -2,7 +2,7 @@
 import React from "react";
 import axios from "axios";
 import type { RawNodeDatum } from "react-d3-tree";
-import { URL } from "../config.js";
+import { URL } from "../../config.js";
 
 interface CustomNodeProps {
   nodeDatum: RawNodeDatum;
