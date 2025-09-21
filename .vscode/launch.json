@@ -1,0 +1,22 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Client (Vite)",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/client/src",
+      "command": "npm run dev",
+      "request": "launch"
+    },
+    {
+      "name": "Server (Nodemon)",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/server",
+      "command": "nodemon",
+      "request": "launch",
+      "env": {
+        "NODE_ENV": "development"
+      }
+    }
+  ]
+}

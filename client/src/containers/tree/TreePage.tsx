@@ -1,35 +1,30 @@
-// TreePage.tsx
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router";
-import { URL } from "../../config.js";
+import { URL } from "../../config";
 import axios from "axios";
 import "./TreePage.css";
 import FamilyTree from "./FamilyTree";
 import AddChildForm from "./AddChildForm";
 import type { RawNodeDatum } from "react-d3-tree";
-
-interface TreePageProps {
-  user: { email: string; familyId: string };
-  logout: () => void;
-}
+import { useAuth } from "../../context/AuthContext";
+import { useNavigation } from "react-router";
 
 interface FamilyTreeData {
   familyName: string;
   members: RawNodeDatum[];
 }
 
-const TreePage: React.FC<TreePageProps> = (props) => {
-  const navigate = useNavigate();
-  const nodeSize = { x: 200, y: 200 };
+const TreePage: React.FC = () => {
+  const navigation = useNavigation();
+  const isLoading = navigation.state === "loading";
 
   const [fetchData, setFetchData] = useState<FamilyTreeData | null>(null);
-  const [loading, setLoading] = useState(true);
   const [selectedNode, setSelectedNode] = useState<any>(null);
   const [newChildName, setNewChildName] = useState("");
+  const { user, logout } = useAuth();
 
   const fetchFamilyTree = async () => {
     try {
-      const familyId = props.user.familyId; // Use the dynamic ID
+      const familyId = user?.familyId; // Use the dynamic ID
       const response = await axios.get(`${URL}/families/${familyId}`);
       if (!response.data) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -37,26 +32,27 @@ const TreePage: React.FC<TreePageProps> = (props) => {
       setFetchData(response.data);
     } catch (error) {
       console.error("Failed to fetch family tree:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchFamilyTree();
-  }, [props.user.familyId]);
+  }, [user?.familyId]);
 
   const handleAddChild = async () => {
     if (!selectedNode || !newChildName.trim()) return;
 
     try {
+      const token = localStorage.getItem("token");
+      if (token) {
+        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      }
+
       await axios.post(`${URL}/persons`, {
         name: newChildName,
         parentId: selectedNode._id,
-        familyId: props.user.familyId,
+        familyId: user?.familyId,
       });
-
-      console.log(selectedNode);
 
       await fetchFamilyTree();
       setNewChildName("");
@@ -66,8 +62,18 @@ const TreePage: React.FC<TreePageProps> = (props) => {
     }
   };
 
-  if (loading) {
+  if (isLoading) {
     return <div>Loading family tree...</div>;
+  }
+
+  // Handle case where user is logged in but has no familyId
+  if (!user?.familyId) {
+    return (
+      <div className="tree_page">
+        <p>No family assigned. Please contact support.</p>
+        <button onClick={logout}>Logout</button>
+      </div>
+    );
   }
 
   return (
@@ -78,7 +84,6 @@ const TreePage: React.FC<TreePageProps> = (props) => {
           treeData={fetchData.members}
           selectedNode={selectedNode}
           setSelectedNode={setSelectedNode}
-          nodeSize={nodeSize}
           setNewChildName={setNewChildName}
           fetchFamilyTree={fetchFamilyTree}
         />
@@ -93,14 +98,6 @@ const TreePage: React.FC<TreePageProps> = (props) => {
           handleAddChild={handleAddChild}
         />
       )}
-      <button
-        onClick={() => {
-          props.logout();
-          navigate("/");
-        }}
-      >
-        Logout
-      </button>
     </div>
   );
 };

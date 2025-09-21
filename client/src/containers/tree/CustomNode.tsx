@@ -1,24 +1,32 @@
-// CustomNode.tsx
 import React from "react";
-import axios from "axios";
 import type { RawNodeDatum } from "react-d3-tree";
-import { URL } from "../../config.js";
+import { Typography, IconButton, Tooltip, Paper } from "@mui/material";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
+import axios from "axios";
 
 interface CustomNodeProps {
   nodeDatum: RawNodeDatum;
-  // toggleNode: () => void;
+  toggleNode: () => void;
   setSelectedNode: (node: RawNodeDatum | null) => void;
   fetchFamilyTree: () => Promise<void>;
   setNewChildName: (name: string) => void;
+  nodeSize: { x: number; y: number };
 }
 
 const CustomNode: React.FC<CustomNodeProps> = ({
   nodeDatum,
   setSelectedNode,
-  fetchFamilyTree,
   setNewChildName,
+  toggleNode,
+  fetchFamilyTree,
+  nodeSize,
 }) => {
-  const handleDeleteChild = async () => {
+  const handleAddClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    setSelectedNode(nodeDatum);
+  };
+  const handleDelete = async () => {
     try {
       await axios.delete(`${URL}/persons/${nodeDatum._id}`);
     } catch (error) {
@@ -29,88 +37,86 @@ const CustomNode: React.FC<CustomNodeProps> = ({
       setSelectedNode(null);
     }
   };
+  const isRootNode = nodeDatum.parent === null;
 
   return (
-    <g>
-      <foreignObject x="-50" y="-30" width="100" height="60">
-        <div
-          style={{
-            border: "1px solid black",
-            backgroundColor: "#dedede",
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            cursor: "default",
-            boxSizing: "border-box",
-            position: "relative",
+    <foreignObject
+      x={-nodeSize.x / 2}
+      y={-nodeSize.y / 2}
+      width={nodeSize.x}
+      height={nodeSize.y}
+      style={{ overflow: "visible" }} // Ensure buttons outside the box are visible
+    >
+      <Paper
+        elevation={3}
+        sx={{
+          width: "100%",
+          height: "100%",
+          p: 1,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          textAlign: "center",
+          cursor: "pointer",
+          border: "2px solid",
+          borderColor: "grey.300",
+          transition: "all 0.3s ease-in-out",
+          "&:hover": {
+            borderColor: "primary.main",
+            transform: "scale(1.05)",
+            boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+          },
+        }}
+        onClick={toggleNode}
+      >
+        <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+          {nodeDatum.name}
+        </Typography>
+        {nodeDatum.attributes?.gender && (
+          <Typography variant="body2" sx={{ color: "text.secondary" }}>
+            {nodeDatum.attributes.gender}
+          </Typography>
+        )}
+      </Paper>
+
+      {/* Add Child Button */}
+      <Tooltip title="Add a new person to the family" arrow>
+        <IconButton
+          sx={{
+            position: "absolute",
+            top: 0,
+            right: 0,
+            color: "green",
+            width: 10,
+            height: 10,
           }}
+          onClick={handleAddClick}
         >
-          <h3
-            style={{
-              margin: 0,
-              padding: "5px",
-              fontSize: "14px",
-              textAlign: "center",
-            }}
-          >
-            {nodeDatum.name}
-          </h3>
-          {/* The "add child" button */}
-          <button
-            onClick={(e) => {
-              e.stopPropagation(); // Prevents the click from bubbling up to the div's toggle
-              setSelectedNode(nodeDatum);
-            }}
-            style={{
+          <AddCircleIcon />
+        </IconButton>
+      </Tooltip>
+
+      {/* Delete Button - Only show if not the root node */}
+      {!isRootNode && (
+        <Tooltip title="Delete this person" arrow>
+          <IconButton
+            sx={{
               position: "absolute",
-              top: "-20px", // Adjust position as needed
-              left: "-10px", // Adjust position as needed
-              width: "20px",
-              height: "20px",
-              borderRadius: "50%",
-              backgroundColor: "green",
-              color: "white",
-              border: "none",
-              cursor: "pointer",
-              fontSize: "18px",
+              top: -10,
+              left: 0,
+              display: nodeDatum?.children.length === 0 ? "inline" : "none",
+              width: 10,
+              height: 10,
+              color: "red",
             }}
+            onClick={handleDelete}
           >
-            +
-          </button>
-          {/* The "delete child" button */}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              alert(`Delete node: ${nodeDatum.name}`);
-              handleDeleteChild();
-            }}
-            style={{
-              position: "absolute",
-              top: "-20px", // Adjust position as needed
-              right: "-10px", // Adjust position as needed
-              width: "20px",
-              height: "20px",
-              borderRadius: "50%",
-              backgroundColor: "red",
-              color: "white",
-              border: "none",
-              cursor: "pointer",
-              fontSize: "18px",
-              // Hide for root node
-              display:
-                nodeDatum.parent === null || nodeDatum.children.length > 0
-                  ? "none"
-                  : "block",
-            }}
-          >
-            -
-          </button>
-        </div>
-      </foreignObject>
-    </g>
+            <RemoveCircleIcon />
+          </IconButton>
+        </Tooltip>
+      )}
+    </foreignObject>
   );
 };
 
