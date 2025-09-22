@@ -8,13 +8,15 @@ import CustomNode from "./CustomNode";
 
 interface FamilyTreeProps {
   treeData: RawNodeDatum[];
-  setSelectedNode: (node: any) => void;
+  selectedNode: RawNodeDatum | null;
+  setSelectedNode: (node: RawNodeDatum | null) => void;
   setNewChildName: (name: string) => void;
   fetchFamilyTree: () => Promise<void>;
 }
 
 const FamilyTree: React.FC<FamilyTreeProps> = ({
   treeData,
+  selectedNode,
   setSelectedNode,
   setNewChildName,
   fetchFamilyTree,
@@ -36,6 +38,7 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
         renderCustomNodeElement={(rd3tProps) => (
           <CustomNode
             {...rd3tProps}
+            selectedNode={selectedNode}
             setSelectedNode={setSelectedNode}
             setNewChildName={setNewChildName}
             fetchFamilyTree={fetchFamilyTree}

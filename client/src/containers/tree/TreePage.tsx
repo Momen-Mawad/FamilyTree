@@ -39,29 +39,6 @@ const TreePage: React.FC = () => {
     fetchFamilyTree();
   }, [user?.familyId]);
 
-  const handleAddChild = async () => {
-    if (!selectedNode || !newChildName.trim()) return;
-
-    try {
-      const token = localStorage.getItem("token");
-      if (token) {
-        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      }
-
-      await axios.post(`${URL}/persons`, {
-        name: newChildName,
-        parentId: selectedNode._id,
-        familyId: user?.familyId,
-      });
-
-      await fetchFamilyTree();
-      setNewChildName("");
-      setSelectedNode(null);
-    } catch (error) {
-      console.error("Error adding child:", error);
-    }
-  };
-
   if (isLoading) {
     return <div>Loading family tree...</div>;
   }
@@ -89,14 +66,6 @@ const TreePage: React.FC = () => {
         />
       ) : (
         <p>No family tree data found.</p>
-      )}
-      {selectedNode && (
-        <AddChildForm
-          selectedNode={selectedNode}
-          newChildName={newChildName}
-          setNewChildName={setNewChildName}
-          handleAddChild={handleAddChild}
-        />
       )}
     </div>
   );
