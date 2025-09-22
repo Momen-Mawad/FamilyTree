@@ -1,4 +1,38 @@
 const { Person, Family, User } = require("../models/models");
+const { nanoid } = require("nanoid");
+
+// Utility function to build nested family tree from flat members array
+function buildFamilyTree(members) {
+  // 2. Create a map for quick access to members by their ID
+  const memberMap = new Map();
+  members.forEach((member) => {
+    const memberObj = member.toObject();
+    memberObj.children = [];
+    memberMap.set(memberObj._id.toString(), memberObj);
+  });
+
+  // 3. Build the nested tree structure (Second Pass)
+  const rootMembers = [];
+  memberMap.forEach((member) => {
+    // If a member has a parent, find the parent in the map and add the member as a child
+    if (member.parent) {
+      const parent = memberMap.get(member.parent.toString());
+      // Make sure the parent exists in the map
+      if (parent) {
+        parent.children.push(member);
+      } else {
+        // This member's parent is not in the fetched list (e.g., they belong to another family)
+        // so we treat them as a root for this specific family tree
+        rootMembers.push(member);
+      }
+    } else {
+      // If a member has no parent, they are a root of the family tree
+      rootMembers.push(member);
+    }
+  });
+
+  return rootMembers;
+}
 
 // FAMILY CONTROLLERS
 // Create Family
@@ -35,33 +69,8 @@ const getFamily = async (req, res) => {
     // 1. Fetch all members of the family
     const members = await Person.find({ family: family._id });
 
-    // 2. Create a map for quick access to members by their ID
-    const memberMap = new Map();
-    members.forEach((member) => {
-      const memberObj = member.toObject();
-      memberObj.children = [];
-      memberMap.set(memberObj._id.toString(), memberObj);
-    });
-
-    // 3. Build the nested tree structure (Second Pass)
-    const rootMembers = [];
-    memberMap.forEach((member) => {
-      // If a member has a parent, find the parent in the map and add the member as a child
-      if (member.parent) {
-        const parent = memberMap.get(member.parent.toString());
-        // Make sure the parent exists in the map
-        if (parent) {
-          parent.children.push(member);
-        } else {
-          // This member's parent is not in the fetched list (e.g., they belong to another family)
-          // so we treat them as a root for this specific family tree
-          rootMembers.push(member);
-        }
-      } else {
-        // If a member has no parent, they are a root of the family tree
-        rootMembers.push(member);
-      }
-    });
+    // Build the nested tree structure using the utility function
+    const rootMembers = buildFamilyTree(members);
 
     // 4. Return the family object with the nested member structure
     res.json({ ...family.toObject(), members: rootMembers });
@@ -73,12 +82,25 @@ const getFamily = async (req, res) => {
 // Update Family
 const updateFamily = async (req, res) => {
   try {
-    const { familyName } = req.body;
-    const family = await Family.findByIdAndUpdate(
-      req.params.id,
-      { familyName },
-      { new: true }
-    );
+    const { familyName, publicCode } = req.body;
+    const update = {};
+    if (familyName) update.familyName = familyName;
+
+    if (publicCode) {
+      // Ensure new code is unique (except for this family)
+      const exists = await Family.findOne({
+        publicCode,
+        _id: { $ne: req.params.id },
+      });
+      if (exists) {
+        return res.status(400).json({ error: "publicCode already exists" });
+      }
+      update.publicCode = publicCode;
+    }
+
+    const family = await Family.findByIdAndUpdate(req.params.id, update, {
+      new: true,
+    });
     if (!family) return res.status(404).json({ error: "Family not found" });
     res.json(family);
   } catch (error) {
@@ -99,6 +121,26 @@ const deleteFamily = async (req, res) => {
   }
 };
 
+// Get family tree by public code (read-only)
+const getFamilyByPublicCode = async (req, res) => {
+  try {
+    const { code } = req.params;
+
+    const family = await Family.findOne({ publicCode: code });
+    if (!family) {
+      return res.status(404).json({ message: "Family not found" });
+    }
+
+    // Populate members in the family
+    const members = await Person.find({ family: family._id });
+    const rootMembers = buildFamilyTree(members);
+
+    res.json({ ...family.toObject(), members: rootMembers });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 // PERSON CONTROLLERS
 // Create Person
 const createPerson = async (req, res) => {
@@ -113,8 +155,6 @@ const createPerson = async (req, res) => {
       parentId,
       familyId,
     } = req.body;
-
-    console.log(req.body);
 
     // parent: single ObjectId (one parent)
     const person = new Person({
@@ -223,7 +263,7 @@ const jwt_secret = process.env.jwt_secret;
 //     password2: form.password2
 //  }
 const register = async (req, res) => {
-  const { email, password, password2, family } = req.body;
+  const { email, password, password2, family, publicCode } = req.body;
   if (!email || !password || !password2 || !family) {
     return res.status(400).json({ ok: false, message: "All fields required" });
   }
@@ -243,8 +283,31 @@ const register = async (req, res) => {
     // Hash the password with the salt
     const hash = bcrypt.hashSync(password, salt);
 
+    // Generate or validate publicCode for the family
+    let finalPublicCode = publicCode;
+    if (!finalPublicCode) {
+      // Generate a unique code
+      let unique = false;
+      while (!unique) {
+        finalPublicCode = nanoid(8);
+        const exists = await Family.findOne({ publicCode: finalPublicCode });
+        if (!exists) unique = true;
+      }
+    } else {
+      // Ensure provided code is unique
+      const exists = await Family.findOne({ publicCode: finalPublicCode });
+      if (exists) {
+        return res
+          .status(400)
+          .json({ ok: false, message: "publicCode already exists" });
+      }
+    }
+
     // create family document for this user
-    const familyDoc = new Family({ familyName: family });
+    const familyDoc = new Family({
+      familyName: family,
+      publicCode: finalPublicCode,
+    });
     await familyDoc.save();
 
     // create a root Person whose name is the family name
@@ -334,6 +397,8 @@ module.exports = {
   getFamily,
   updateFamily,
   deleteFamily,
+  // Public family tree by code
+  getFamilyByPublicCode,
   // Auth
   register,
   login,

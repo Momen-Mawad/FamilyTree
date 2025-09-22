@@ -60,7 +60,7 @@ const Home = () => {
                 backgroundColor: "rgba(255, 255, 255, 0.3)",
               },
             }}
-            onClick={() => navigate("/register")}
+            onClick={() => navigate("/get-started")}
           >
             {t("home.getStarted")}
           </Button>

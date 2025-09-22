@@ -9,13 +9,14 @@ import Home from "../containers/Home";
 import Login from "../containers/Login";
 import Register from "../containers/Register";
 import TreePage from "../containers/tree/TreePage";
+import PublicFamilyPage from "../containers/tree/PublicFamilyPage";
 import Navbar from "../components/Navbar";
 import { useAuth } from "../context/AuthContext";
 import { useScreenSize } from "../context/screenSizeContext";
-import treeLoader from "../containers/tree/loader";
+import GetStarted from "../containers/GetStarted";
 
 const AppRouter = () => {
-  const { isLoggedIn, user } = useAuth();
+  const { isLoggedIn } = useAuth();
   const isSmallScreen = useScreenSize();
 
   // Note: The login and logout functions should be handled inside the Login/Register/Navbar components,
@@ -46,11 +47,14 @@ const AppRouter = () => {
         {
           path: "tree",
           element: isLoggedIn ? <TreePage /> : <Navigate to="/login" />,
-          loader: (args) =>
-            treeLoader({
-              ...args,
-              params: { ...args.params, familyId: user?.familyId },
-            }),
+        },
+        {
+          path: "public/:code",
+          element: <PublicFamilyPage />,
+        },
+        {
+          path: "get-started",
+          element: <GetStarted />,
         },
       ],
     },

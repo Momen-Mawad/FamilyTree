@@ -44,5 +44,22 @@
     "title": "Add a new child for {{parentName}}",
     "placeholder": "Enter child's name",
     "addButton": "Add Child"
+  },
+  "getStarted": {
+    "loginTab": "Login",
+    "registerTab": "Register",
+    "loginTitle": "Login to your account",
+    "registerTitle": "Create a new account",
+    "email": "Email",
+    "password": "Password",
+    "name": "Name",
+    "loginBtn": "Login",
+    "registerBtn": "Register",
+    "noAccount": "Don't have an account? Register",
+    "haveAccount": "Already have an account? Login",
+    "familyCodeTitle": "Enter Family Code",
+    "familyCodeDesc": "View a public family tree by entering its code.",
+    "familyCodeInput": "Family Code",
+    "viewFamilyBtn": "View Family Tree"
   }
 }

@@ -14,6 +14,7 @@ interface CustomNodeProps {
   setSelectedNode: (node: RawNodeDatum | null) => void;
   fetchFamilyTree: () => Promise<void>;
   nodeSize: { x: number; y: number };
+  publicNode?: boolean;
 }
 
 const CustomNode: React.FC<CustomNodeProps> = ({
@@ -23,6 +24,7 @@ const CustomNode: React.FC<CustomNodeProps> = ({
   toggleNode,
   fetchFamilyTree,
   nodeSize,
+  publicNode = false,
 }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [localChildName, setLocalChildName] = React.useState("");
@@ -113,7 +115,7 @@ const CustomNode: React.FC<CustomNodeProps> = ({
           textAlign: "center",
           cursor: "pointer",
           border: "2px solid",
-          borderColor,
+          borderColor: borderColor,
           transition: "all 0.3s ease-in-out",
           "&:hover": {
             borderColor: "primary.main",
@@ -147,7 +149,7 @@ const CustomNode: React.FC<CustomNodeProps> = ({
             minHeight: 0,
             border: "2px solid green",
             borderRadius: "50%",
-            display: "flex",
+            display: publicNode ? "none" : "flex",
             alignItems: "center",
             justifyContent: "center",
             fontSize: 20,
@@ -176,7 +178,8 @@ const CustomNode: React.FC<CustomNodeProps> = ({
                 left: 0,
                 display:
                   Array.isArray(nodeDatum.children) &&
-                  nodeDatum.children.length === 0
+                  nodeDatum.children.length === 0 &&
+                  !publicNode
                     ? "flex"
                     : "none",
                 width: 10,

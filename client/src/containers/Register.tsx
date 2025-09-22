@@ -26,7 +26,6 @@ const Register: React.FC = () => {
     type: "success" | "error" | "";
   }>({ text: "", type: "" });
   const navigate = useNavigate();
-  const { login } = useAuth();
   const { t } = useTranslation();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,7 +66,6 @@ const Register: React.FC = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        minHeight: "100vh",
         padding: 2,
       }}
     >

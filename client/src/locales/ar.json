@@ -44,5 +44,22 @@
     "title": "أضف طفلًا جديدًا لـ {{parentName}}",
     "placeholder": "أدخل اسم الطفل",
     "addButton": "أضف طفل"
+  },
+  "getStarted": {
+    "loginTab": "تسجيل الدخول",
+    "registerTab": "إنشاء حساب",
+    "loginTitle": "تسجيل الدخول إلى حسابك",
+    "registerTitle": "إنشاء حساب جديد",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "name": "الاسم",
+    "loginBtn": "تسجيل الدخول",
+    "registerBtn": "إنشاء حساب",
+    "noAccount": "ليس لديك حساب؟ أنشئ حسابًا",
+    "haveAccount": "لديك حساب بالفعل؟ سجل الدخول",
+    "familyCodeTitle": "أدخل رمز العائلة",
+    "familyCodeDesc": "اعرض شجرة عائلة عامة بإدخال رمزها.",
+    "familyCodeInput": "رمز العائلة",
+    "viewFamilyBtn": "عرض شجرة العائلة"
   }
 }

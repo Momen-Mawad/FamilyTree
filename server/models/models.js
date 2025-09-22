@@ -16,6 +16,7 @@ const PersonSchema = new Schema({
 const FamilySchema = new Schema({
   familyName: { type: String, required: true },
   created: { type: Date, default: Date.now },
+  publicCode: { type: String, unique: true, required: true },
 });
 
 const UserSchema = new mongoose.Schema(
@@ -25,7 +26,7 @@ const UserSchema = new mongoose.Schema(
     family: { type: Schema.Types.ObjectId, ref: "Family", required: true },
     created: { type: Date, default: Date.now },
   },
-  { strictQuery: false },
+  { strictQuery: false }
 );
 
 const Person = mongoose.model("Person", PersonSchema);
