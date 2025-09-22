@@ -1,8 +1,10 @@
 import { Box, Button, Container, Typography } from "@mui/material";
 import { useNavigate } from "react-router";
+import { useTranslation } from "react-i18next";
 
 const Home = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return (
     <Box>
@@ -16,7 +18,7 @@ const Home = () => {
           justifyContent: "center",
           color: "white",
           textAlign: "center",
-          backgroundImage: "url(/family-tree-background.png)", // Use the new image
+          backgroundImage: "url(/family-tree-background.png)",
           backgroundSize: "cover",
           backgroundPosition: "center",
           "&::before": {
@@ -38,14 +40,14 @@ const Home = () => {
             gutterBottom
             sx={{ textShadow: "2px 2px 4px rgba(0,0,0,0.5)" }}
           >
-            Preserve Your Family Legacy
+            {t("home.heroTitle")}
           </Typography>
           <Typography
             variant="h5"
             component="p"
             sx={{ mb: 4, textShadow: "1px 1px 3px rgba(0,0,0,0.5)" }}
           >
-            Create and explore your family tree with ease.
+            {t("home.heroSubtitle")}
           </Typography>
           <Button
             variant="contained"
@@ -60,19 +62,16 @@ const Home = () => {
             }}
             onClick={() => navigate("/register")}
           >
-            Get Started
+            {t("home.getStarted")}
           </Button>
         </Box>
       </Box>
       <Container maxWidth="lg" sx={{ my: 4 }}>
         <Typography variant="h4" component="h2" align="center" gutterBottom>
-          Welcome to Family Tree
+          {t("home.welcomeTitle")}
         </Typography>
         <Typography variant="body1" align="center">
-          Family Tree is a powerful tool to help you document, share, and
-          visualize your family history. Whether you are a beginner or a
-          seasoned genealogist, our platform provides a simple and intuitive way
-          to connect with your past.
+          {t("home.welcomeDescription")}
         </Typography>
       </Container>
     </Box>

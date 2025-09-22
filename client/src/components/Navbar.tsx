@@ -1,35 +1,37 @@
 import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
 import { Link } from "react-router";
 import { useAuth } from "../context/AuthContext";
+import { useTranslation } from "react-i18next";
 
 const Navbar = () => {
-  const { isLoggedIn, logout } = useAuth(); // Get isLoggedIn and logout from AuthContext
+  const { isLoggedIn, logout } = useAuth();
+  const { t } = useTranslation();
 
   return (
     <AppBar position="static">
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
-            Family Tree
+            {t("navbar.title")}
           </Link>
         </Typography>
         <Box>
           {isLoggedIn ? (
             <>
               <Button color="inherit" component={Link} to="/tree">
-                Family Tree
+                {t("navbar.familyTree")}
               </Button>
               <Button color="inherit" onClick={logout}>
-                Logout
+                {t("navbar.logout")}
               </Button>
             </>
           ) : (
             <>
               <Button color="inherit" component={Link} to="/login">
-                Login
+                {t("navbar.login")}
               </Button>
               <Button color="inherit" component={Link} to="/register">
-                Register
+                {t("navbar.register")}
               </Button>
             </>
           )}

@@ -1,5 +1,5 @@
-// AddChildForm.tsx
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 interface AddChildFormProps {
   selectedNode: { name: string };
@@ -13,17 +13,21 @@ const AddChildForm: React.FC<AddChildFormProps> = ({
   newChildName,
   setNewChildName,
   handleAddChild,
-}) => (
-  <div className="add-child-form">
-    <h3>Add a new child for {selectedNode.name}</h3>
-    <input
-      type="text"
-      value={newChildName}
-      onChange={(e) => setNewChildName(e.target.value)}
-      placeholder="Enter child's name"
-    />
-    <button onClick={handleAddChild}>Add Child</button>
-  </div>
-);
+}) => {
+  const { t } = useTranslation();
+
+  return (
+    <div className="add-child-form">
+      <h3>{t("addChildForm.title", { parentName: selectedNode.name })}</h3>
+      <input
+        type="text"
+        value={newChildName}
+        onChange={(e) => setNewChildName(e.target.value)}
+        placeholder={t("addChildForm.placeholder")}
+      />
+      <button onClick={handleAddChild}>{t("addChildForm.addButton")}</button>
+    </div>
+  );
+};
 
 export default AddChildForm;

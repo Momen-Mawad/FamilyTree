@@ -1,0 +1,48 @@
+{
+  "home": {
+    "heroTitle": "Preserve Your Family Legacy",
+    "heroSubtitle": "Create and explore your family tree with ease.",
+    "getStarted": "Get Started",
+    "welcomeTitle": "Welcome to Family Tree",
+    "welcomeDescription": "Family Tree is a powerful tool to help you document, share, and visualize your family history. Whether you are a beginner or a seasoned genealogist, our platform provides a simple and intuitive way to connect with your past."
+  },
+  "navbar": {
+    "title": "Family Tree",
+    "familyTree": "Family Tree",
+    "logout": "Logout",
+    "login": "Login",
+    "register": "Register"
+  },
+  "register": {
+    "title": "Register",
+    "email": "Email Address",
+    "password": "Password",
+    "repeatPassword": "Repeat Password",
+    "familyName": "Family Name",
+    "submit": "Register",
+    "unexpectedError": "An unexpected error occurred. Please try again."
+  },
+  "login": {
+    "title": "Login",
+    "email": "Email Address",
+    "password": "Password",
+    "submit": "Sign In",
+    "unexpectedError": "An unexpected error occurred. Please try again."
+  },
+  "treePage": {
+    "loading": "Loading family tree...",
+    "noFamilyAssigned": "No family assigned. Please contact support.",
+    "logout": "Logout",
+    "familyTreeFor": "Family Tree for {{familyName}}'s Family",
+    "noDataFound": "No family tree data found."
+  },
+  "customNode": {
+    "addChildTooltip": "Add a new child to this person",
+    "deleteTooltip": "Delete this person"
+  },
+  "addChildForm": {
+    "title": "Add a new child for {{parentName}}",
+    "placeholder": "Enter child's name",
+    "addButton": "Add Child"
+  }
+}

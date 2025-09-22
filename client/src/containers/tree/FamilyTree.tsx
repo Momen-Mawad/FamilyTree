@@ -10,7 +10,6 @@ interface FamilyTreeProps {
   treeData: RawNodeDatum[];
   selectedNode: RawNodeDatum | null;
   setSelectedNode: (node: RawNodeDatum | null) => void;
-  setNewChildName: (name: string) => void;
   fetchFamilyTree: () => Promise<void>;
 }
 
@@ -18,7 +17,6 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
   treeData,
   selectedNode,
   setSelectedNode,
-  setNewChildName,
   fetchFamilyTree,
 }) => {
   const [translate, containerRef] = useCenteredTree();
@@ -40,7 +38,6 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
             {...rd3tProps}
             selectedNode={selectedNode}
             setSelectedNode={setSelectedNode}
-            setNewChildName={setNewChildName}
             fetchFamilyTree={fetchFamilyTree}
             nodeSize={nodeSize}
           />

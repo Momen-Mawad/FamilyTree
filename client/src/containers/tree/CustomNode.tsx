@@ -5,6 +5,7 @@ import axios from "axios";
 import AddChildForm from "./AddChildForm";
 import { useAuth } from "../../context/AuthContext";
 import { URL } from "../../config";
+import { useTranslation } from "react-i18next";
 
 interface CustomNodeProps {
   nodeDatum: RawNodeDatum;
@@ -12,7 +13,6 @@ interface CustomNodeProps {
   selectedNode: RawNodeDatum | null;
   setSelectedNode: (node: RawNodeDatum | null) => void;
   fetchFamilyTree: () => Promise<void>;
-  setNewChildName: (name: string) => void;
   nodeSize: { x: number; y: number };
 }
 
@@ -20,24 +20,26 @@ const CustomNode: React.FC<CustomNodeProps> = ({
   nodeDatum,
   selectedNode,
   setSelectedNode,
-  setNewChildName,
   toggleNode,
   fetchFamilyTree,
   nodeSize,
 }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [localChildName, setLocalChildName] = React.useState("");
+  const { user } = useAuth();
+  const { t } = useTranslation();
+
   const handleAddClick = (event: React.MouseEvent) => {
     event.stopPropagation();
     setSelectedNode(nodeDatum);
     setAnchorEl(event.currentTarget);
   };
-  const { user } = useAuth();
 
   const handlePopoverClose = () => {
     setAnchorEl(null);
     setLocalChildName("");
   };
+
   const handleAddChild = async () => {
     if (!selectedNode || !localChildName.trim()) return;
 
@@ -56,7 +58,6 @@ const CustomNode: React.FC<CustomNodeProps> = ({
       // Close the popover first
       setAnchorEl(null);
       setLocalChildName("");
-      setNewChildName("");
       setSelectedNode(null);
 
       // Then refresh the tree
@@ -73,11 +74,23 @@ const CustomNode: React.FC<CustomNodeProps> = ({
       console.error("Error deleting child:", error);
     } finally {
       await fetchFamilyTree();
-      setNewChildName("");
+      setLocalChildName("");
       setSelectedNode(null);
     }
   };
+
   const isRootNode = nodeDatum.parent === null;
+
+  const hasNoChildren =
+    !Array.isArray(nodeDatum.children) || nodeDatum.children.length === 0;
+  const isCollapsed = nodeDatum.__rd3t.collapsed === true;
+
+  let borderColor = "grey.300";
+  if (hasNoChildren) {
+    borderColor = "warning.main"; // orange for no children
+  } else if (isCollapsed) {
+    borderColor = "info.main"; // blue for collapsed
+  }
 
   return (
     <foreignObject
@@ -100,7 +113,7 @@ const CustomNode: React.FC<CustomNodeProps> = ({
           textAlign: "center",
           cursor: "pointer",
           border: "2px solid",
-          borderColor: "grey.300",
+          borderColor,
           transition: "all 0.3s ease-in-out",
           "&:hover": {
             borderColor: "primary.main",
@@ -121,7 +134,7 @@ const CustomNode: React.FC<CustomNodeProps> = ({
       </Paper>
 
       {/* Add Child Button */}
-      <Tooltip title="Add a new child to this person" arrow>
+      <Tooltip title={t("customNode.addChildTooltip")} arrow>
         <IconButton
           sx={{
             position: "absolute",
@@ -155,7 +168,7 @@ const CustomNode: React.FC<CustomNodeProps> = ({
       {/* Delete Button - Only show if not the root node */}
       {!isRootNode && (
         <>
-          <Tooltip title="Delete this person" arrow>
+          <Tooltip title={t("customNode.deleteTooltip")} arrow>
             <IconButton
               sx={{
                 position: "absolute",
@@ -189,23 +202,23 @@ const CustomNode: React.FC<CustomNodeProps> = ({
               -
             </IconButton>
           </Tooltip>
-          <Popover
-            open={Boolean(anchorEl)}
-            anchorEl={anchorEl}
-            onClose={handlePopoverClose}
-            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-            transformOrigin={{ vertical: "top", horizontal: "right" }}
-            disableEnforceFocus
-          >
-            <AddChildForm
-              selectedNode={nodeDatum}
-              newChildName={localChildName}
-              setNewChildName={setLocalChildName}
-              handleAddChild={handleAddChild}
-            />
-          </Popover>
         </>
       )}
+      <Popover
+        open={Boolean(anchorEl)}
+        anchorEl={anchorEl}
+        onClose={handlePopoverClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        disableEnforceFocus
+      >
+        <AddChildForm
+          selectedNode={nodeDatum}
+          newChildName={localChildName}
+          setNewChildName={setLocalChildName}
+          handleAddChild={handleAddChild}
+        />
+      </Popover>
     </foreignObject>
   );
 };

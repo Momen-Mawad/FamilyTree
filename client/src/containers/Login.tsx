@@ -3,12 +3,14 @@ import { Box, TextField, Button, Typography, Paper } from "@mui/material";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { URL } from "../config";
+import { useTranslation } from "react-i18next";
 
 const Login = () => {
   const { login } = useAuth(); // Get the login function from AuthContext
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const { t } = useTranslation();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,7 +26,7 @@ const Login = () => {
       if (err.response && err.response.data && err.response.data.message) {
         setError(err.response.data.message);
       } else {
-        setError("An unexpected error occurred. Please try again.");
+        setError(t("login.unexpectedError"));
       }
     }
   };
@@ -40,7 +42,7 @@ const Login = () => {
     >
       <Paper elevation={3} sx={{ padding: 4, width: "100%", maxWidth: 400 }}>
         <Typography variant="h4" component="h1" gutterBottom align="center">
-          Login
+          {t("login.title")}
         </Typography>
         <Box component="form" onSubmit={handleLogin} sx={{ mt: 1 }}>
           <TextField
@@ -48,7 +50,7 @@ const Login = () => {
             required
             fullWidth
             id="email"
-            label="Email Address"
+            label={t("login.email")}
             name="email"
             autoComplete="email"
             autoFocus
@@ -60,7 +62,7 @@ const Login = () => {
             required
             fullWidth
             name="password"
-            label="Password"
+            label={t("login.password")}
             type="password"
             id="password"
             autoComplete="current-password"
@@ -78,7 +80,7 @@ const Login = () => {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Sign In
+            {t("login.submit")}
           </Button>
         </Box>
       </Paper>
