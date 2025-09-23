@@ -34,7 +34,10 @@
     "noFamilyAssigned": "No family assigned. Please contact support.",
     "logout": "Logout",
     "familyTreeFor": "Family Tree for {{familyName}}'s Family",
-    "noDataFound": "No family tree data found."
+    "noDataFound": "No family tree data found.",
+    "publicCode": "Public Code",
+    "showCode": "Show code",
+    "hideCode": "Hide code"
   },
   "customNode": {
     "addChildTooltip": "Add a new child to this person",

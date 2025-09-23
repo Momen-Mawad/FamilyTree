@@ -34,7 +34,10 @@
     "noFamilyAssigned": "لم يتم تعيين عائلة. يرجى التواصل مع الدعم.",
     "logout": "تسجيل الخروج",
     "familyTreeFor": "شجرة عائلة {{familyName}}",
-    "noDataFound": "لم يتم العثور على بيانات لشجرة العائلة."
+    "noDataFound": "لم يتم العثور على بيانات لشجرة العائلة.",
+    "publicCode": "رمز العائلة العام",
+    "showCode": "إظهار الرمز",
+    "hideCode": "إخفاء الرمز"
   },
   "customNode": {
     "addChildTooltip": "أضف طفلًا جديدًا لهذا الشخص",
