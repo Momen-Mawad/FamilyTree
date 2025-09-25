@@ -74,4 +74,8 @@ tree -I "node_modules|dist|build|coverage|logs"
 
 ### deploy to surge
 
+npm run build
+
+cp index.html 200.html
+
 surge --domain https://familytree-me.surge.sh/

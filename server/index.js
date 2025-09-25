@@ -25,6 +25,9 @@ app.use((req, res, next) => {
 //==========================================================================
 // Mount API routes for Person and Family
 app.use("/api", require("./routes/routes.js"));
+// Mount routes for sending emails
+app.use("/email", require("./routes/emailRoutes.js"));
+// Catch-all route for handling 404 errors
 app.get("/*splat", (req, res) => {
   res.status(404).json({ error: "Route not found" });
 });
