@@ -24,6 +24,7 @@ const UserSchema = new mongoose.Schema(
     email: { type: String, unique: true, required: true },
     password: { type: String, required: true },
     family: { type: Schema.Types.ObjectId, ref: "Family", required: true },
+    isVerified: { type: Boolean, default: false },
     created: { type: Date, default: Date.now },
   },
   { strictQuery: false }

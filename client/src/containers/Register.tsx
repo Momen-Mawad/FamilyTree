@@ -9,7 +9,6 @@ import {
   Paper,
   Alert,
 } from "@mui/material";
-import { useAuth } from "../context/AuthContext";
 import { URL } from "../config";
 import { useTranslation } from "react-i18next";
 
@@ -46,9 +45,6 @@ const Register: React.FC = () => {
 
       if (response.data.ok) {
         setMessage({ text: response.data.message, type: "success" });
-        setTimeout(() => {
-          navigate("/login");
-        }, 2000);
       } else {
         setMessage({ text: response.data.message, type: "error" });
       }

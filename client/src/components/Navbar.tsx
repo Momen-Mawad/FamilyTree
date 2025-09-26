@@ -1,7 +1,9 @@
-import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
+import { AppBar, Toolbar, Button, Box } from "@mui/material";
 import { Link } from "react-router";
 import { useAuth } from "../context/AuthContext";
 import { useTranslation } from "react-i18next";
+import LogoIcon from "../../public/icon.svg";
+import ImageListItem from "@mui/material/ImageListItem";
 
 const Navbar = () => {
   const { isLoggedIn, logout } = useAuth();
@@ -9,13 +11,39 @@ const Navbar = () => {
 
   return (
     <AppBar position="static">
-      <Toolbar>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
-            {t("navbar.title")}
-          </Link>
-        </Typography>
-        <Box>
+      <Toolbar sx={{ justifyContent: "space-between" }}>
+        {/* Placeholder Box: Ensures symmetry on the left */}
+        <Box sx={{ minWidth: 100, flexGrow: 1 }} />
+
+        {/* Logo: Centered and clickable */}
+        <Box
+          component={Link}
+          to="/"
+          sx={{
+            flexGrow: 1,
+            position: "absolute",
+            left: 0,
+            right: 0,
+            margin: "0 auto",
+            maxWidth: 48,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            textDecoration: "none",
+          }}
+        >
+          <img srcSet="/icon.svg" loading="lazy" style={{ height: 40 }} />
+        </Box>
+
+        {/* Links/Buttons: Pushed to the far right (or left in RTL) */}
+        <Box
+          sx={{
+            minWidth: 100,
+            flexGrow: 1,
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
+        >
           {isLoggedIn ? (
             <>
               <Button color="inherit" component={Link} to="/tree">

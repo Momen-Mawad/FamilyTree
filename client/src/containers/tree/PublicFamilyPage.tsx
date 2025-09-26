@@ -27,8 +27,6 @@ const PublicFamilyPage: React.FC = () => {
     axios
       .get(`${URL}/public/family/${code}`)
       .then((response) => {
-        console.log(response);
-
         setFamilyName(response.data.familyName || "Family");
         setFetchData(response.data);
         setError(null);

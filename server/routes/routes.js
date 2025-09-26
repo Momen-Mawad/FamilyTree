@@ -22,5 +22,6 @@ router.get("/public/family/:code", controller.getFamilyByPublicCode);
 router.post("/register", controller.register);
 router.post("/login", controller.login);
 router.post("/verify_token", controller.verify_token);
+router.get("/verify_email", controller.verify_email);
 
 module.exports = router;

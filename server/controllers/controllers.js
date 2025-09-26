@@ -237,7 +237,6 @@ const updatePerson = async (req, res) => {
 // Delete Person
 const deletePerson = async (req, res) => {
   try {
-    console.log("id", req.params.id);
     const person = await Person.findByIdAndDelete(req.params.id);
     if (!person) return res.status(404).json({ error: "Person not found" });
     // Optionally, remove this person from any children's parents array
@@ -256,12 +255,8 @@ const bcrypt = require("bcryptjs"); // https://github.com/dcodeIO/bcrypt.js#read
 const jwt = require("jsonwebtoken");
 const validator = require("validator");
 const jwt_secret = process.env.jwt_secret;
-// the client is sending this body object
-//  {
-//     email: form.email,
-//     password: form.password,
-//     password2: form.password2
-//  }
+const emailController = require("./emailController"); // <-- Add this
+
 const register = async (req, res) => {
   const { email, password, password2, family, publicCode } = req.body;
   if (!email || !password || !password2 || !family) {
@@ -329,9 +324,19 @@ const register = async (req, res) => {
       family: familyDoc._id,
     };
     await User.create(newUser);
-    res.status(201).json({ ok: true, message: "Successfully registered" });
+
+    // Generate a JWT token for email verification
+    const emailToken = jwt.sign({ email }, jwt_secret, { expiresIn: "1d" });
+    const verifyUrl = `http://localhost:4444/api/verify_email?token=${emailToken}`;
+
+    await emailController.sendConfirmationEmail(email, verifyUrl);
+
+    res.status(201).json({
+      ok: true,
+      message:
+        "Successfully registered. Please check your email to verify your account.",
+    });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ ok: false, error });
   }
 };
@@ -354,6 +359,14 @@ const login = async (req, res) => {
       return res
         .status(400)
         .json({ ok: false, message: "Invalid user provided" });
+
+    // Check if user is verified
+    if (!user.isVerified) {
+      return res.status(403).json({
+        ok: false,
+        message: "Please verify your email before logging in",
+      });
+    }
 
     const match = bcrypt.compareSync(password, user.password);
     if (match) {
@@ -384,6 +397,40 @@ const verify_token = (req, res) => {
   });
 };
 
+// Email verification endpoint
+const verify_email = async (req, res) => {
+  const { token } = req.query;
+  if (!token) {
+    return res.status(400).json({ ok: false, message: "No token provided" });
+  }
+
+  try {
+    // Decode and verify the token
+    const decoded = jwt.verify(token, jwt_secret);
+    const { email } = decoded;
+
+    // Find the user and update their verification status
+    const user = await User.findOneAndUpdate(
+      { email },
+      { $set: { isVerified: true } },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ ok: false, message: "User not found" });
+    }
+
+    // Optionally, redirect to frontend with a success message
+    res.redirect(`${process.env.FRONTEND_URL}/login?verified=1`);
+
+    return res.json({ ok: true, message: "Email verified successfully" });
+  } catch (error) {
+    return res
+      .status(400)
+      .json({ ok: false, message: "Invalid or expired token" });
+  }
+};
+
 module.exports = {
   // Person CRUD
   createPerson,
@@ -403,4 +450,5 @@ module.exports = {
   register,
   login,
   verify_token,
+  verify_email,
 };
