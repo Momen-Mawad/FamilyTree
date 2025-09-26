@@ -7,6 +7,7 @@ import { URL } from "../../config";
 import PublicFamilyTree from "./PublicFamilyTree";
 import "./TreePage.css";
 import { useTranslation } from "react-i18next";
+import { useLocation } from "react-router";
 
 interface FamilyTreeData {
   familyName: string;
@@ -14,7 +15,8 @@ interface FamilyTreeData {
 }
 
 const PublicFamilyPage: React.FC = () => {
-  const { code } = useParams<{ code: string }>();
+  const location = useLocation();
+  const code = location.state?.code as string | undefined;
   const [fetchData, setFetchData] = useState<FamilyTreeData | null>(null);
   const [familyName, setFamilyName] = useState<string>("");
   const [loading, setLoading] = useState(true);
@@ -25,7 +27,7 @@ const PublicFamilyPage: React.FC = () => {
     if (!code) return;
     setLoading(true);
     axios
-      .get(`${URL}/public/family/${code}`)
+      .post(`${URL}/public/family`, { code })
       .then((response) => {
         setFamilyName(response.data.familyName || "Family");
         setFetchData(response.data);

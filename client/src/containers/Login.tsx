@@ -4,6 +4,7 @@ import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { URL } from "../config";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
 
 const Login = () => {
   const { login } = useAuth(); // Get the login function from AuthContext
@@ -11,6 +12,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const { t } = useTranslation();
+  const navigate = useNavigate(); // Add this line
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,7 +22,8 @@ const Login = () => {
         password,
       });
       if (response.data.token) {
-        login(response.data.token); // Call the login function from AuthContext
+        login(response.data.token);
+        navigate("/tree"); // Redirect to the tree page after successful login
       }
     } catch (err: any) {
       if (err.response && err.response.data && err.response.data.message) {

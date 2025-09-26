@@ -124,7 +124,7 @@ const deleteFamily = async (req, res) => {
 // Get family tree by public code (read-only)
 const getFamilyByPublicCode = async (req, res) => {
   try {
-    const { code } = req.params;
+    const { code } = req.body;
 
     const family = await Family.findOne({ publicCode: code });
     if (!family) {

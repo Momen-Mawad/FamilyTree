@@ -24,7 +24,7 @@ const GetStarted = () => {
 
   const handleViewFamily = (e: React.FormEvent) => {
     e.preventDefault();
-    if (familyCode) navigate(`/public/${familyCode}`);
+    if (familyCode) navigate(`/public/`, { state: { code: familyCode } });
   };
 
   return (

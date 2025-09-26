@@ -2,8 +2,6 @@ import { AppBar, Toolbar, Button, Box } from "@mui/material";
 import { Link } from "react-router";
 import { useAuth } from "../context/AuthContext";
 import { useTranslation } from "react-i18next";
-import LogoIcon from "../../public/icon.svg";
-import ImageListItem from "@mui/material/ImageListItem";
 
 const Navbar = () => {
   const { isLoggedIn, logout } = useAuth();
@@ -55,7 +53,7 @@ const Navbar = () => {
             </>
           ) : (
             <>
-              <Button color="inherit" component={Link} to="/login">
+              <Button color="inherit" component={Link} to="/get-started">
                 {t("navbar.login")}
               </Button>
               <Button color="inherit" component={Link} to="/register">

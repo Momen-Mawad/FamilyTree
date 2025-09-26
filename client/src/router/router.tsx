@@ -12,12 +12,10 @@ import TreePage from "../containers/tree/TreePage";
 import PublicFamilyPage from "../containers/tree/PublicFamilyPage";
 import Navbar from "../components/Navbar";
 import { useAuth } from "../context/AuthContext";
-import { useScreenSize } from "../context/screenSizeContext";
 import GetStarted from "../containers/GetStarted";
 
 const AppRouter = () => {
   const { isLoggedIn } = useAuth();
-  const isSmallScreen = useScreenSize();
 
   // Note: The login and logout functions should be handled inside the Login/Register/Navbar components,
   // calling the functions provided by the AuthContext.
@@ -46,10 +44,10 @@ const AppRouter = () => {
         },
         {
           path: "tree",
-          element: isLoggedIn ? <TreePage /> : <Navigate to="/login" />,
+          element: isLoggedIn ? <TreePage /> : <Navigate to="/get-started" />,
         },
         {
-          path: "public/:code",
+          path: "public",
           element: <PublicFamilyPage />,
         },
         {

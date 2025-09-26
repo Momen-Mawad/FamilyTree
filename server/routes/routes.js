@@ -16,7 +16,7 @@ router.put("/families/:id", controller.updateFamily);
 router.delete("/families/:id", controller.deleteFamily);
 
 // Public family tree route (read-only, by code)
-router.get("/public/family/:code", controller.getFamilyByPublicCode);
+router.post("/public/family", controller.getFamilyByPublicCode);
 
 // Auth routes
 router.post("/register", controller.register);
