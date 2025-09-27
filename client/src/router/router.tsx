@@ -13,6 +13,7 @@ import PublicFamilyPage from "../containers/tree/PublicFamilyPage";
 import Navbar from "../components/Navbar";
 import { useAuth } from "../context/AuthContext";
 import GetStarted from "../containers/GetStarted";
+import FamilyCodeCard from "../components/FamilyCodeCard";
 
 const AppRouter = () => {
   const { isLoggedIn } = useAuth();
@@ -53,6 +54,10 @@ const AppRouter = () => {
         {
           path: "get-started",
           element: <GetStarted />,
+        },
+        {
+          path: "family-code",
+          element: <FamilyCodeCard />,
         },
       ],
     },

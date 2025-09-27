@@ -13,6 +13,7 @@ import { useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
 import Login from "./Login";
 import Register from "./Register";
+import FamilyCodeCard from "../components/FamilyCodeCard";
 
 const GetStarted = () => {
   const { t } = useTranslation();
@@ -47,33 +48,7 @@ const GetStarted = () => {
         </CardContent>
       </Card>
       {/* Family Code Card */}
-      <Card>
-        <CardContent>
-          <Typography variant="h6" gutterBottom>
-            {t("getStarted.familyCodeTitle")}
-          </Typography>
-          <Typography variant="body2" sx={{ mb: 2 }}>
-            {t("getStarted.familyCodeDesc")}
-          </Typography>
-          <Box component="form" onSubmit={handleViewFamily}>
-            <TextField
-              fullWidth
-              variant="outlined"
-              placeholder={t("getStarted.familyCodeInput")}
-              value={familyCode}
-              onChange={(e) => setFamilyCode(e.target.value)}
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              {t("getStarted.viewFamilyBtn")}
-            </Button>
-          </Box>
-        </CardContent>
-      </Card>
+      <FamilyCodeCard />
     </Box>
   );
 };

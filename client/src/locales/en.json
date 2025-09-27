@@ -11,7 +11,8 @@
     "familyTree": "Family Tree",
     "logout": "Logout",
     "login": "Login",
-    "register": "Register"
+    "register": "Register",
+    "familyCode": "Family Code"
   },
   "register": {
     "title": "Register",

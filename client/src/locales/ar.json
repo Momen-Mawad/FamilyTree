@@ -11,7 +11,8 @@
     "familyTree": "شجرة العائلة",
     "logout": "تسجيل الخروج",
     "login": "تسجيل الدخول",
-    "register": "إنشاء حساب"
+    "register": "إنشاء حساب",
+    "familyCode": "رمز العائلة"
   },
   "register": {
     "title": "إنشاء حساب",
