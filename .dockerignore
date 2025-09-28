@@ -1,0 +1,11 @@
+# .dockerignore
+# Ignore node_modules for clean context switching
+node_modules
+client/node_modules
+server/node_modules
+
+# Ignore build outputs
+client/dist
+client/build
+client/coverage
+server/coverage

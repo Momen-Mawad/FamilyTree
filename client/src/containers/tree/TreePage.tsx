@@ -67,21 +67,37 @@ const TreePage: React.FC = () => {
   if (!fetchData) return <p>{t("treePage.noDataFound")}</p>;
 
   return (
-    <div className="tree_page">
+    <Box
+      sx={{
+        textAlign: "center",
+        fontFamily: "Arial, sans-serif",
+        p: 2,
+        backgroundColor: "#f4f7f9",
+        minHeight: "100vh",
+        gap: 2,
+      }}
+    >
+      <h1>
+        {t("treePage.familyTreeFor", { familyName: fetchData?.familyName })}
+      </h1>
+      <FamilyTree
+        treeData={fetchData.members}
+        selectedNode={selectedNode}
+        setSelectedNode={setSelectedNode}
+        fetchFamilyTree={fetchFamilyTree}
+      />
       {/* Public Code Reveal Box */}
       <Box
         sx={{
-          position: "absolute",
-          top: 16,
-          right: 16,
-          zIndex: 10,
           display: "flex",
-          alignItems: "center",
           bgcolor: "background.paper",
           borderRadius: 2,
           boxShadow: 2,
           p: 1,
-          minWidth: 220,
+          width: "80vw",
+          maxWidth: 200,
+          mx: "auto",
+          mt: 2,
         }}
       >
         <Tooltip
@@ -107,28 +123,10 @@ const TreePage: React.FC = () => {
           }
           size="small"
           variant="outlined"
-          InputProps={{
-            readOnly: true,
-            endAdornment: (
-              <InputAdornment position="end">
-                {/* Empty, just for spacing */}
-              </InputAdornment>
-            ),
-            style: { letterSpacing: "0.2em" },
-          }}
           sx={{ flex: 1 }}
         />
       </Box>
-      <h1>
-        {t("treePage.familyTreeFor", { familyName: fetchData?.familyName })}
-      </h1>
-      <FamilyTree
-        treeData={fetchData.members}
-        selectedNode={selectedNode}
-        setSelectedNode={setSelectedNode}
-        fetchFamilyTree={fetchFamilyTree}
-      />
-    </div>
+    </Box>
   );
 };
 

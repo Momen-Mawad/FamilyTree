@@ -1,0 +1,12 @@
+.idea
+passkey.txt
+known_hosts
+client/node_modules
+client/build
+.env
+dancemap/Momen_accessKeys.csv
+dancemap/venv
+Keymaster.pem
+.cache
+*.mp4
+*/**/__pycache__/
