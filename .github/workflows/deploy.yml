@@ -48,9 +48,9 @@ jobs:
               -e PORT=3000 \
               -e MONGO="${{ secrets.MONGO }}" \
               -e jwt_secret="${{ secrets.jwt_secret }}" \
-              -e CLIENT_ID="${{ secrets.CLIENT_ID }}" \
-              -e CLIENT_SECRET="${{ secrets.CLIENT_SECRET }}" \
-              -e REFRESH_TOKEN="${{ secrets.REFRESH_TOKEN }}" \
+              -e GOOGLE_CLIENT_ID="${{ secrets.GOOGLE_CLIENT_ID }}" \
+              -e GOOGLE_CLIENT_SECRET="${{ secrets.GOOGLE_CLIENT_SECRET }}" \
+              -e GOOGLE_REFRESH_TOKEN="${{ secrets.GOOGLE_REFRESH_TOKEN }}" \
               -e ACCESS_TOKEN="${{ secrets.ACCESS_TOKEN }}" \
               -e ADMIN_EMAIL="${{ secrets.ADMIN_EMAIL }}" \
               -e FRONTEND_URL="${{ secrets.FRONTEND_URL }}" \
