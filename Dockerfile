@@ -31,7 +31,7 @@ COPY server/ server/
 COPY --from=client-builder /app/client/dist /app/client/dist
 
 # Define environment variables used by the backend
-# Your Node.js app expects environment variables (CLIENT_ID, REFRESH_TOKEN, etc.)
+# Node.js app expects environment variables (CLIENT_ID, REFRESH_TOKEN, etc.)
 # These should be passed at runtime (e.g., in docker run or ECS/EC2)
 ENV NODE_ENV=production
 ENV PORT=4444
