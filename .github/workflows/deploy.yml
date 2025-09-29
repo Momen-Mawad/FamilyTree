@@ -43,9 +43,9 @@ jobs:
             docker rm familytree-container || true
             docker run -d \
               --name familytree-container \
-              -p 8080:3000 \
+              -p 8080:4444 \
               -e NODE_ENV=production \
-              -e PORT=3000 \
+              -e PORT=4444 \
               -e MONGO="${{ secrets.MONGO }}" \
               -e jwt_secret="${{ secrets.jwt_secret }}" \
               -e GOOGLE_CLIENT_ID="${{ secrets.GOOGLE_CLIENT_ID }}" \
