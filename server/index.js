@@ -35,8 +35,10 @@ app.use("/email", require("./routes/emailRoutes.js"));
 // console.log("Running in production mode");
 const BUILD_PATH = path.join("/app", "client", "dist");
 // Serve all static assets (JS, CSS, images) from the build folder
+console.log("Static middleware path:", BUILD_PATH);
 app.use(express.static(BUILD_PATH));
 app.get("/", (req, res) => {
+  console.log("Serving index.html for /");
   res.sendFile(path.join(BUILD_PATH, "index.html"));
 });
 // Add a catch-all route. For any GET request not handled by API routes,
