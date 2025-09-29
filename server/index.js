@@ -31,24 +31,25 @@ app.use("/api", require("./routes/routes.js"));
 // Mount routes for sending emails
 app.use("/email", require("./routes/emailRoutes.js"));
 //==========================================================================
-// if (process.env.NODE_ENV === "production") {
-const BUILD_PATH = path.join(__dirname, "..", "client", "dist");
-// Serve all static assets (JS, CSS, images) from the build folder
-app.use(express.static(BUILD_PATH));
-// Add a catch-all route. For any GET request not handled by API routes,
-// send the main index.html file. This is crucial for React Router.
-app.get("*splat", (req, res) => {
-  // Check if the request path starts with our API prefixes.
-  // If it does, let the API routes handle it (or return 404 if API routes fail).
-  if (
-    req.originalUrl.startsWith("/api") ||
-    req.originalUrl.startsWith("/email")
-  ) {
-    return res.status(404).json({ error: "API Route not found" });
-  }
-  // Otherwise, send the index.html for the client-side app to handle the routing
-  res.sendFile(path.join(BUILD_PATH, "index.html"));
-});
-// }
+if (process.env.NODE_ENV === "production") {
+  console.log("Running in production mode");
+  const BUILD_PATH = path.join("/app", "client", "dist");
+  // Serve all static assets (JS, CSS, images) from the build folder
+  app.use(express.static(BUILD_PATH));
+  // Add a catch-all route. For any GET request not handled by API routes,
+  // send the main index.html file. This is crucial for React Router.
+  app.get("*splat", (req, res) => {
+    // Check if the request path starts with our API prefixes.
+    // If it does, let the API routes handle it (or return 404 if API routes fail).
+    if (
+      req.originalUrl.startsWith("/api") ||
+      req.originalUrl.startsWith("/email")
+    ) {
+      return res.status(404).json({ error: "API Route not found" });
+    }
+    // Otherwise, send the index.html for the client-side app to handle the routing
+    res.sendFile(path.join(BUILD_PATH, "index.html"));
+  });
+}
 //==========================================================================
 app.listen(port, () => console.log("🚀 Listening on port: " + port + " 🚀"));
