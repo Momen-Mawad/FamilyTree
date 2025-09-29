@@ -43,7 +43,7 @@ jobs:
             docker rm familytree-container || true
             docker run -d \
               --name familytree-container \
-              -p 8080:4444 \
+              -p 4444:4444 \
               -e NODE_ENV=production \
               -e PORT=4444 \
               -e MONGO="${{ secrets.MONGO }}" \
