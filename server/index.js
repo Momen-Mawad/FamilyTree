@@ -36,6 +36,9 @@ app.use("/email", require("./routes/emailRoutes.js"));
 const BUILD_PATH = path.join("/app", "client", "dist");
 // Serve all static assets (JS, CSS, images) from the build folder
 app.use(express.static(BUILD_PATH));
+app.get("/", (req, res) => {
+  res.sendFile(path.join(BUILD_PATH, "index.html"));
+});
 // Add a catch-all route. For any GET request not handled by API routes,
 // send the main index.html file. This is crucial for React Router.
 app.get("*splat", (req, res) => {
