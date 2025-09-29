@@ -44,6 +44,6 @@ EXPOSE 4444
 # to serve files from '../client/dist' when in production mode.
 
 # Set the entry point to run the server
-CMD ["pm2-runtime", "server/index.js"] 
+CMD ["node", "server/index.js"] 
 # Note: You may need to install PM2 globally in this stage if you use it in the CMD.
 # A simpler CMD is just: CMD [ "node", "server/index.js" ]
