@@ -23,6 +23,28 @@ app.use((req, res, next) => {
   next();
 });
 //==========================================================================
+if (process.env.NODE_ENV === "production") {
+  const BUILD_PATH = path.join(__dirname, "..", "client", "dist");
+
+  // 1. Serve all static assets (JS, CSS, images) from the build folder
+  app.use(express.static(BUILD_PATH));
+
+  // 2. Add a catch-all route. For any GET request not handled by API routes,
+  // send the main index.html file. This is crucial for React Router.
+  app.get("*", (req, res) => {
+    // Check if the request path starts with our API prefixes.
+    // If it does, let the API routes handle it (or return 404 if API routes fail).
+    if (
+      req.originalUrl.startsWith("/api") ||
+      req.originalUrl.startsWith("/email")
+    ) {
+      return res.status(404).json({ error: "API Route not found" });
+    }
+    // Otherwise, send the index.html for the client-side app to handle the routing
+    res.sendFile(path.join(BUILD_PATH, "index.html"));
+  });
+}
+//==========================================================================
 // Mount API routes for Person and Family
 app.use("/api", require("./routes/routes.js"));
 // Mount routes for sending emails
