@@ -32,7 +32,7 @@ app.use("/api", require("./routes/routes.js"));
 app.use("/email", require("./routes/emailRoutes.js"));
 //==========================================================================
 // if (process.env.NODE_ENV === "production") {
-console.log("Running in production mode");
+// console.log("Running in production mode");
 const BUILD_PATH = path.join("/app", "client", "dist");
 // Serve all static assets (JS, CSS, images) from the build folder
 app.use(express.static(BUILD_PATH));
