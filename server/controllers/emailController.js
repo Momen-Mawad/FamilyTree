@@ -27,7 +27,9 @@ class SESController {
     const senderEmail = process.env.ADMIN_EMAIL;
     console.log("Using sender email:", senderEmail);
     if (!senderEmail) {
-      throw new Error("ADMIN_EMAIL environment variable is not set.");
+      throw new Error(
+        `ADMIN_EMAIL environment variable is not set. Email is ${senderEmail}`
+      );
     }
 
     const params = {
