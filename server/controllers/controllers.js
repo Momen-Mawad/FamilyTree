@@ -40,14 +40,6 @@ let region;
 let senderEmail;
 
 function initializeSesClient() {
-  // Debug log before throwing error
-  console.log("SES INIT DEBUG:", {
-    accessKeyId,
-    secretAccessKey,
-    region,
-    senderEmail,
-  });
-
   accessKeyId = process.env.AWS_ACCESS_KEY_ID
     ? process.env.AWS_ACCESS_KEY_ID.trim()
     : undefined;
@@ -61,6 +53,13 @@ function initializeSesClient() {
     ? process.env.ADMIN_EMAIL.trim()
     : undefined;
 
+  // Debug log before throwing error
+  console.log("SES INIT DEBUG:", {
+    accessKeyId,
+    secretAccessKey,
+    region,
+    senderEmail,
+  });
   // if (!accessKeyId || !secretAccessKey || !region || !senderEmail) {
   //   throw new Error(
   //     "AWS or ADMIN_EMAIL environment variables are not set or are invalid. Please check .env file."
@@ -448,12 +447,12 @@ const register = async (req, res) => {
     const emailToken = jwt.sign({ email }, jwt_secret, { expiresIn: "1d" });
     const verifyUrl = `${process.env.BACKEND_URL}/api/verify_email?token=${emailToken}`;
 
-    await sendSesEmail(email, verifyUrl);
+    // await sendSesEmail(email, verifyUrl);
 
     res.status(201).json({
       ok: true,
       message:
-        "Successfully registered. Please check your email to verify your account.",
+        "Successfully registered. An Admin will verify your email shortly.",
     });
   } catch (error) {
     if (error.name) {

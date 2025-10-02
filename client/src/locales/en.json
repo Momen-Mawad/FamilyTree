@@ -21,7 +21,8 @@
     "repeatPassword": "Repeat Password",
     "familyName": "Family Name",
     "submit": "Register",
-    "unexpectedError": "An unexpected error occurred. Please try again."
+    "unexpectedError": "An unexpected error occurred. Please try again.",
+    "success": "Successfully registered. An Admin will verify your email shortly"
   },
   "login": {
     "title": "Login",

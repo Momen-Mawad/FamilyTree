@@ -44,7 +44,7 @@ const Register: React.FC = () => {
       console.log(response);
 
       if (response.data.ok) {
-        setMessage({ text: response.data.message, type: "success" });
+        setMessage({ text: t("register.success"), type: "success" });
       } else {
         setMessage({ text: response.data.message, type: "error" });
       }

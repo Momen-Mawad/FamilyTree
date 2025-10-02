@@ -1,15 +1,5 @@
-import React, { useState } from "react";
-import {
-  Box,
-  Card,
-  CardContent,
-  Typography,
-  Tabs,
-  Tab,
-  Button,
-  TextField,
-} from "@mui/material";
-import { useNavigate } from "react-router";
+import { useState } from "react";
+import { Box, Card, CardContent, Tabs, Tab } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import Login from "./Login";
 import Register from "./Register";
@@ -17,16 +7,9 @@ import FamilyCodeCard from "../components/FamilyCodeCard";
 
 const GetStarted = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const [tab, setTab] = useState(0);
-  const [familyCode, setFamilyCode] = useState("");
 
   const handleTabChange = (_: any, newValue: number) => setTab(newValue);
-
-  const handleViewFamily = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (familyCode) navigate(`/public/`, { state: { code: familyCode } });
-  };
 
   return (
     <Box
