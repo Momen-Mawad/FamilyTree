@@ -18,11 +18,9 @@ const sesClient = new SESv2Client({
   },
 });
 
-const sendSesEmail = async (
-  senderEmail = "eng.momen3@gmail.com",
-  userEmail,
-  verifyUrl
-) => {
+const sendSesEmail = async (userEmail, verifyUrl) => {
+  const senderEmail = process.env.ADMIN_EMAIL;
+
   if (!senderEmail) {
     throw new Error(
       `ADMIN_EMAIL environment variable is not set. Email is ${senderEmail}`
