@@ -1,8 +1,19 @@
 const { Person, Family, User } = require("../models/models");
 const { nanoid } = require("nanoid");
 
-console.log("Controllers loaded");
-
+console.log(
+  "SES DEBUG: ADMIN_EMAIL =",
+  JSON.stringify(process.env.ADMIN_EMAIL)
+);
+console.log(
+  "SES DEBUG: AWS_ACCESS_KEY_ID =",
+  JSON.stringify(process.env.AWS_ACCESS_KEY_ID)
+);
+console.log(
+  "SES DEBUG: AWS_SECRET_ACCESS_KEY =",
+  JSON.stringify(process.env.AWS_SECRET_ACCESS_KEY)
+);
+console.log("SES DEBUG: AWS_REGION =", JSON.stringify(process.env.AWS_REGION));
 function buildFamilyTree(members) {
   const memberMap = new Map();
   members.forEach((member) => {
@@ -43,23 +54,6 @@ let senderEmail;
 
 function initializeSesClient() {
   if (sesClient) return;
-
-  console.log(
-    "SES DEBUG: ADMIN_EMAIL =",
-    JSON.stringify(process.env.ADMIN_EMAIL)
-  );
-  console.log(
-    "SES DEBUG: AWS_ACCESS_KEY_ID =",
-    JSON.stringify(process.env.AWS_ACCESS_KEY_ID)
-  );
-  console.log(
-    "SES DEBUG: AWS_SECRET_ACCESS_KEY =",
-    JSON.stringify(process.env.AWS_SECRET_ACCESS_KEY)
-  );
-  console.log(
-    "SES DEBUG: AWS_REGION =",
-    JSON.stringify(process.env.AWS_REGION)
-  );
 
   // Use a local require here to ensure dotenv is checked (though main index.js should handle it)
 
