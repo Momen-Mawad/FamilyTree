@@ -1,6 +1,8 @@
 const { Person, Family, User } = require("../models/models");
 const { nanoid } = require("nanoid");
 
+console.log("Controllers loaded");
+
 function buildFamilyTree(members) {
   const memberMap = new Map();
   members.forEach((member) => {
