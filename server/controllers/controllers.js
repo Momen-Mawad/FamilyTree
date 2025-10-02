@@ -1,5 +1,6 @@
 const { Person, Family, User } = require("../models/models");
 const { nanoid } = require("nanoid");
+const emailController = require("./emailController");
 
 // Utility function to build nested family tree from flat members array
 function buildFamilyTree(members) {
@@ -255,7 +256,6 @@ const bcrypt = require("bcryptjs"); // https://github.com/dcodeIO/bcrypt.js#read
 const jwt = require("jsonwebtoken");
 const validator = require("validator");
 const jwt_secret = process.env.jwt_secret;
-const emailController = require("./emailController");
 
 const register = async (req, res) => {
   const { email, password, password2, family, publicCode } = req.body;
