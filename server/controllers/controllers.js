@@ -42,6 +42,23 @@ let senderEmail;
 function initializeSesClient() {
   if (sesClient) return;
 
+  console.log(
+    "SES DEBUG: ADMIN_EMAIL =",
+    JSON.stringify(process.env.ADMIN_EMAIL)
+  );
+  console.log(
+    "SES DEBUG: AWS_ACCESS_KEY_ID =",
+    JSON.stringify(process.env.AWS_ACCESS_KEY_ID)
+  );
+  console.log(
+    "SES DEBUG: AWS_SECRET_ACCESS_KEY =",
+    JSON.stringify(process.env.AWS_SECRET_ACCESS_KEY)
+  );
+  console.log(
+    "SES DEBUG: AWS_REGION =",
+    JSON.stringify(process.env.AWS_REGION)
+  );
+
   // Use a local require here to ensure dotenv is checked (though main index.js should handle it)
 
   // Get and trim environment variables. This code runs only when called.
@@ -239,7 +256,6 @@ const deleteFamily = async (req, res) => {
 
 // Get family tree by public code (read-only)
 const getFamilyByPublicCode = async (req, res) => {
-  console.log(process.env.ADMIN_EMAIL);
   try {
     const { code } = req.body;
 
