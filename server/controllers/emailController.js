@@ -1,5 +1,6 @@
 const { SESv2Client, SendEmailCommand } = require("@aws-sdk/client-sesv2");
-
+// load environment variables from environment
+require("dotenv").config();
 let sesClient;
 let accessKeyId;
 let secretAccessKey;

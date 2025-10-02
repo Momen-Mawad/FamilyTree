@@ -1,9 +1,7 @@
 const express = require("express");
 const path = require("path");
 const app = require("express")();
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
-}
+require("dotenv").config();
 const port = process.env.PORT || 4444;
 
 app.use(require("express").urlencoded({ extended: true }));
