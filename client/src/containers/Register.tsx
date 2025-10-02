@@ -41,8 +41,6 @@ const Register: React.FC = () => {
         family: form.familyName,
       });
 
-      console.log(response);
-
       if (response.data.ok) {
         setMessage({ text: t("register.success"), type: "success" });
       } else {
