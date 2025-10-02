@@ -21,7 +21,11 @@ const sesClient = new SESv2Client({
 });
 
 class SESController {
-  async sendSesEmail(senderEmail, userEmail, verifyUrl) {
+  async sendSesEmail(
+    senderEmail = "eng.momen3@gmail.com",
+    userEmail,
+    verifyUrl
+  ) {
     if (!senderEmail) {
       throw new Error(
         `ADMIN_EMAIL environment variable is not set. Email is ${senderEmail}`
