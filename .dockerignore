@@ -9,3 +9,8 @@ client/dist
 client/build
 client/coverage
 server/coverage
+
+# Ignore environment files
+.env
+client/.env
+server/.env
