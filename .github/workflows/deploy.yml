@@ -43,5 +43,6 @@ jobs:
             docker run -d \
               --name familytree-container \
               -p 8080:4444 \
+              --env-file /home/ubuntu/.env.prod \
               ${{ secrets.DOCKER_USERNAME }}/familytree-app:latest
             docker system prune -af
