@@ -47,7 +47,6 @@ function initializeSesClient() {
     region,
     senderEmail,
   });
-  if (sesClient) return;
 
   accessKeyId = process.env.AWS_ACCESS_KEY_ID
     ? process.env.AWS_ACCESS_KEY_ID.trim()
@@ -67,6 +66,8 @@ function initializeSesClient() {
       "AWS or ADMIN_EMAIL environment variables are not set or are invalid. Please check .env file."
     );
   }
+
+  if (sesClient) return;
 
   sesClient = new SESv2Client({
     region: region,
