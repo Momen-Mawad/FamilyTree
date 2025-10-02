@@ -255,7 +255,7 @@ const bcrypt = require("bcryptjs"); // https://github.com/dcodeIO/bcrypt.js#read
 const jwt = require("jsonwebtoken");
 const validator = require("validator");
 const jwt_secret = process.env.jwt_secret;
-const emailController = require("./emailController"); // <-- Add this
+const emailController = require("./emailController");
 
 const register = async (req, res) => {
   const { email, password, password2, family, publicCode } = req.body;
@@ -338,7 +338,6 @@ const register = async (req, res) => {
         "Successfully registered. Please check your email to verify your account.",
     });
   } catch (error) {
-    // Check if the error is an AWS error (like InvalidSignatureException)
     if (error.name) {
       console.error("AWS SES Error:", error.name, error.message);
       // Return a clean 500 error to the client
