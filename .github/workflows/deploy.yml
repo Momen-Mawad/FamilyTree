@@ -53,7 +53,7 @@ jobs:
               -e GOOGLE_CLIENT_SECRET="${{ secrets.GOOGLE_CLIENT_SECRET }}" \
               -e GOOGLE_REFRESH_TOKEN="${{ secrets.GOOGLE_REFRESH_TOKEN }}" \
               -e ACCESS_TOKEN="${{ secrets.ACCESS_TOKEN }}" \
-              -e ADMIN_EMAIL="eng.momen3@gmail.com" \
+              -e ADMIN_EMAIL="${{ secrets.ADMIN_EMAIL }}" \
               -e FRONTEND_URL="${{ secrets.FRONTEND_URL }}" \
               ${{ secrets.DOCKER_USERNAME }}/familytree-app:latest
 
