@@ -33,7 +33,6 @@ function buildFamilyTree(members) {
 
 const { SESv2Client, SendEmailCommand } = require("@aws-sdk/client-sesv2");
 // load environment variables from environment
-require("dotenv").config();
 let sesClient;
 let accessKeyId;
 let secretAccessKey;
@@ -240,6 +239,7 @@ const deleteFamily = async (req, res) => {
 
 // Get family tree by public code (read-only)
 const getFamilyByPublicCode = async (req, res) => {
+  console.log(process.env.ADMIN_EMAIL);
   try {
     const { code } = req.body;
 
