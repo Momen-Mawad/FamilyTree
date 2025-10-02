@@ -1,19 +1,7 @@
 const { Person, Family, User } = require("../models/models");
 const { nanoid } = require("nanoid");
+const { SESv2Client, SendEmailCommand } = require("@aws-sdk/client-sesv2");
 
-console.log(
-  "SES DEBUG: ADMIN_EMAIL =",
-  JSON.stringify(process.env.ADMIN_EMAIL)
-);
-console.log(
-  "SES DEBUG: AWS_ACCESS_KEY_ID =",
-  JSON.stringify(process.env.AWS_ACCESS_KEY_ID)
-);
-console.log(
-  "SES DEBUG: AWS_SECRET_ACCESS_KEY =",
-  JSON.stringify(process.env.AWS_SECRET_ACCESS_KEY)
-);
-console.log("SES DEBUG: AWS_REGION =", JSON.stringify(process.env.AWS_REGION));
 function buildFamilyTree(members) {
   const memberMap = new Map();
   members.forEach((member) => {
@@ -44,7 +32,6 @@ function buildFamilyTree(members) {
   return rootMembers;
 }
 
-const { SESv2Client, SendEmailCommand } = require("@aws-sdk/client-sesv2");
 // load environment variables from environment
 let sesClient;
 let accessKeyId;
@@ -55,9 +42,6 @@ let senderEmail;
 function initializeSesClient() {
   if (sesClient) return;
 
-  // Use a local require here to ensure dotenv is checked (though main index.js should handle it)
-
-  // Get and trim environment variables. This code runs only when called.
   accessKeyId = process.env.AWS_ACCESS_KEY_ID
     ? process.env.AWS_ACCESS_KEY_ID.trim()
     : undefined;
@@ -71,7 +55,14 @@ function initializeSesClient() {
     ? process.env.ADMIN_EMAIL.trim()
     : undefined;
 
-  // Check for critical missing variables now
+  // Debug log before throwing error
+  console.log("SES INIT DEBUG:", {
+    accessKeyId,
+    secretAccessKey,
+    region,
+    senderEmail,
+  });
+
   if (!accessKeyId || !secretAccessKey || !region || !senderEmail) {
     throw new Error(
       "AWS or ADMIN_EMAIL environment variables are not set or are invalid. Please check .env file."
