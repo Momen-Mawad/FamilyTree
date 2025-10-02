@@ -28,8 +28,6 @@ app.use((req, res, next) => {
 // =========================================================================
 // Mount API routes for Person and Family
 app.use("/api", require("./routes/routes.js"));
-// Mount routes for sending emails
-app.use("/email", require("./routes/emailRoutes.js"));
 //==========================================================================
 // if (process.env.NODE_ENV === "production") {
 // console.log("Running in production mode");
