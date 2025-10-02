@@ -16,7 +16,7 @@ async function connectingToDB() {
   }
 }
 connectingToDB();
-
+console.log("DEBUG: ADMIN_EMAIL =", process.env.ADMIN_EMAIL);
 //==========================================================================
 app.use(require("cors")());
 // simple request logger for tests
