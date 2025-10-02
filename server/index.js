@@ -1,8 +1,10 @@
 const express = require("express");
 const path = require("path");
 const app = require("express")();
-require("dotenv").config();
-const port = process.env.PORT || 4444;
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
+const port = process.env.PORT;
 
 app.use(require("express").urlencoded({ extended: true }));
 app.use(require("express").json());
