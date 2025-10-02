@@ -141,11 +141,14 @@ const Navbar = () => {
                 </>
               ) : (
                 <>
-                  <Button color="inherit" component={Link} to="/get-started">
+                  <Button color="inherit" component={Link} to="/login">
                     {t("navbar.login")}
                   </Button>
                   <Button color="inherit" component={Link} to="/register">
                     {t("navbar.register")}
+                  </Button>
+                  <Button color="inherit" component={Link} to="/family-code">
+                    {t("navbar.familyCode")}
                   </Button>
                 </>
               )}
