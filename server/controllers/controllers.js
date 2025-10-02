@@ -329,7 +329,7 @@ const register = async (req, res) => {
     const emailToken = jwt.sign({ email }, jwt_secret, { expiresIn: "1d" });
     const verifyUrl = `http://localhost:4444/api/verify_email?token=${emailToken}`;
 
-    await emailController.sendConfirmationEmail(email, verifyUrl);
+    await emailController.sendSesEmail(email, verifyUrl);
 
     res.status(201).json({
       ok: true,
@@ -337,7 +337,21 @@ const register = async (req, res) => {
         "Successfully registered. Please check your email to verify your account.",
     });
   } catch (error) {
-    res.status(500).json({ ok: false, error });
+    // Check if the error is an AWS error (like InvalidSignatureException)
+    if (error.name) {
+      console.error("AWS SES Error:", error.name, error.message);
+      // Return a clean 500 error to the client
+      return res.status(500).json({
+        ok: false,
+        message: "Email service authentication failed. Check server logs.",
+      });
+    }
+
+    // Default error handling
+    console.error(error);
+    res
+      .status(500)
+      .json({ ok: false, error: "An unexpected server error occurred." });
   }
 };
 

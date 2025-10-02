@@ -1,6 +1,5 @@
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router";
 import {
   Box,
   TextField,
@@ -24,7 +23,6 @@ const Register: React.FC = () => {
     text: string;
     type: "success" | "error" | "";
   }>({ text: "", type: "" });
-  const navigate = useNavigate();
   const { t } = useTranslation();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,6 +40,8 @@ const Register: React.FC = () => {
         password2: form.password2,
         family: form.familyName,
       });
+
+      console.log(response);
 
       if (response.data.ok) {
         setMessage({ text: response.data.message, type: "success" });
