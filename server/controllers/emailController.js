@@ -1,15 +1,13 @@
 const { SESv2Client, SendEmailCommand } = require("@aws-sdk/client-sesv2");
 
-// 1. Declare sesClient and environment variables, but DO NOT initialize them yet.
 let sesClient;
 let accessKeyId;
 let secretAccessKey;
 let region;
 let senderEmail;
 
-// 2. Create a setup function that runs ONLY ONCE and only when the first email is sent.
 function initializeSesClient() {
-  if (sesClient) return; // Already initialized
+  if (sesClient) return;
 
   // Use a local require here to ensure dotenv is checked (though main index.js should handle it)
 
@@ -34,7 +32,6 @@ function initializeSesClient() {
     );
   }
 
-  // Initialize the client instance now that environment variables are guaranteed to be loaded
   sesClient = new SESv2Client({
     region: region,
     credentials: {
