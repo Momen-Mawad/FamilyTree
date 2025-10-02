@@ -1,31 +1,51 @@
 const { SESv2Client, SendEmailCommand } = require("@aws-sdk/client-sesv2");
 
-const accessKeyId = process.env.AWS_ACCESS_KEY_ID
-  ? process.env.AWS_ACCESS_KEY_ID.trim()
-  : undefined;
-const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY
-  ? process.env.AWS_SECRET_ACCESS_KEY.trim()
-  : undefined;
-const region = process.env.AWS_REGION
-  ? process.env.AWS_REGION.trim()
-  : "eu-central-1";
+// 1. Declare sesClient and environment variables, but DO NOT initialize them yet.
+let sesClient;
+let accessKeyId;
+let secretAccessKey;
+let region;
+let senderEmail;
 
-const sesClient = new SESv2Client({
-  region: region,
-  credentials: {
-    accessKeyId: accessKeyId,
-    secretAccessKey: secretAccessKey,
-  },
-});
+// 2. Create a setup function that runs ONLY ONCE and only when the first email is sent.
+function initializeSesClient() {
+  if (sesClient) return; // Already initialized
 
-const sendSesEmail = async (userEmail, verifyUrl) => {
-  const senderEmail = process.env.ADMIN_EMAIL;
+  // Use a local require here to ensure dotenv is checked (though main index.js should handle it)
 
-  if (!senderEmail) {
+  // Get and trim environment variables. This code runs only when called.
+  accessKeyId = process.env.AWS_ACCESS_KEY_ID
+    ? process.env.AWS_ACCESS_KEY_ID.trim()
+    : undefined;
+  secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY
+    ? process.env.AWS_SECRET_ACCESS_KEY.trim()
+    : undefined;
+  region = process.env.AWS_REGION
+    ? process.env.AWS_REGION.trim()
+    : "eu-central-1";
+  senderEmail = process.env.ADMIN_EMAIL
+    ? process.env.ADMIN_EMAIL.trim()
+    : undefined;
+
+  // Check for critical missing variables now
+  if (!accessKeyId || !secretAccessKey || !region || !senderEmail) {
     throw new Error(
-      `ADMIN_EMAIL environment variable is not set. Email is ${senderEmail}`
+      "AWS or ADMIN_EMAIL environment variables are not set or are invalid. Please check .env file."
     );
   }
+
+  // Initialize the client instance now that environment variables are guaranteed to be loaded
+  sesClient = new SESv2Client({
+    region: region,
+    credentials: {
+      accessKeyId: accessKeyId,
+      secretAccessKey: secretAccessKey,
+    },
+  });
+}
+
+const sendSesEmail = async (userEmail, verifyUrl) => {
+  initializeSesClient();
 
   const params = {
     FromEmailAddress: senderEmail,
@@ -65,11 +85,7 @@ const sendSesEmail = async (userEmail, verifyUrl) => {
 };
 
 const contactForm = async (req, res) => {
-  const { name, email, message } = req.body;
-  const senderEmail = process.env.ADMIN_EMAIL;
-  if (!senderEmail) {
-    return res.status(500).json({ message: "ADMIN_EMAIL not set" });
-  }
+  initializeSesClient();
 
   const params = {
     FromEmailAddress: senderEmail,
