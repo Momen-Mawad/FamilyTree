@@ -61,11 +61,11 @@ function initializeSesClient() {
     ? process.env.ADMIN_EMAIL.trim()
     : undefined;
 
-  if (!accessKeyId || !secretAccessKey || !region || !senderEmail) {
-    throw new Error(
-      "AWS or ADMIN_EMAIL environment variables are not set or are invalid. Please check .env file."
-    );
-  }
+  // if (!accessKeyId || !secretAccessKey || !region || !senderEmail) {
+  //   throw new Error(
+  //     "AWS or ADMIN_EMAIL environment variables are not set or are invalid. Please check .env file."
+  //   );
+  // }
 
   if (sesClient) return;
 
