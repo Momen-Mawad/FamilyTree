@@ -2,20 +2,6 @@ const { Person, Family, User } = require("../models/models");
 const { nanoid } = require("nanoid");
 const { SESv2Client, SendEmailCommand } = require("@aws-sdk/client-sesv2");
 
-console.log(
-  "SES DEBUG: ADMIN_EMAIL =",
-  JSON.stringify(process.env.ADMIN_EMAIL)
-);
-console.log(
-  "SES DEBUG: AWS_ACCESS_KEY_ID =",
-  JSON.stringify(process.env.AWS_ACCESS_KEY_ID)
-);
-console.log(
-  "SES DEBUG: AWS_SECRET_ACCESS_KEY =",
-  JSON.stringify(process.env.AWS_SECRET_ACCESS_KEY)
-);
-console.log("SES DEBUG: AWS_REGION =", JSON.stringify(process.env.AWS_REGION));
-
 function buildFamilyTree(members) {
   const memberMap = new Map();
   members.forEach((member) => {
@@ -54,6 +40,13 @@ let region;
 let senderEmail;
 
 function initializeSesClient() {
+  // Debug log before throwing error
+  console.log("SES INIT DEBUG:", {
+    accessKeyId,
+    secretAccessKey,
+    region,
+    senderEmail,
+  });
   if (sesClient) return;
 
   accessKeyId = process.env.AWS_ACCESS_KEY_ID
@@ -68,14 +61,6 @@ function initializeSesClient() {
   senderEmail = process.env.ADMIN_EMAIL
     ? process.env.ADMIN_EMAIL.trim()
     : undefined;
-
-  // Debug log before throwing error
-  console.log("SES INIT DEBUG:", {
-    accessKeyId,
-    secretAccessKey,
-    region,
-    senderEmail,
-  });
 
   if (!accessKeyId || !secretAccessKey || !region || !senderEmail) {
     throw new Error(
