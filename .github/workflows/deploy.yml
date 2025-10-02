@@ -42,7 +42,6 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/familytree-app:latest
             docker stop familytree-container || true
             docker rm familytree-container || true
-            console.log("Using admin email: ${{ secrets.ADMIN_EMAIL }}"); || true
             docker run -d \
               --name familytree-container \
               -p 8080:4444 \
@@ -54,7 +53,7 @@ jobs:
               -e GOOGLE_CLIENT_SECRET="${{ secrets.GOOGLE_CLIENT_SECRET }}" \
               -e GOOGLE_REFRESH_TOKEN="${{ secrets.GOOGLE_REFRESH_TOKEN }}" \
               -e ACCESS_TOKEN="${{ secrets.ACCESS_TOKEN }}" \
-              -e ADMIN_EMAIL="${{ secrets.ADMIN_EMAIL }}" \
+              -e ADMIN_EMAIL="eng.momen3@gmail.com" \
               -e FRONTEND_URL="${{ secrets.FRONTEND_URL }}" \
               ${{ secrets.DOCKER_USERNAME }}/familytree-app:latest
 
