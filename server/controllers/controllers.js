@@ -327,7 +327,7 @@ const register = async (req, res) => {
 
     // Generate a JWT token for email verification
     const emailToken = jwt.sign({ email }, jwt_secret, { expiresIn: "1d" });
-    const verifyUrl = `http://localhost:4444/api/verify_email?token=${emailToken}`;
+    const verifyUrl = `${process.env.BACKEND_URL}/api/verify_email?token=${emailToken}`;
 
     await emailController.sendSesEmail(email, verifyUrl);
 
