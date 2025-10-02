@@ -4,6 +4,7 @@ known_hosts
 client/node_modules
 client/build
 .env
+.env.prod
 dancemap/Momen_accessKeys.csv
 dancemap/venv
 Keymaster.pem

@@ -37,24 +37,12 @@ jobs:
           username: ${{ secrets.AWS_EC2_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            env
-            echo "${{ secrets.DOCKER_PASSWORD }}" | docker login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin
             docker pull ${{ secrets.DOCKER_USERNAME }}/familytree-app:latest
             docker stop familytree-container || true
             docker rm familytree-container || true
             docker run -d \
               --name familytree-container \
               -p 8080:4444 \
-              -e NODE_ENV=production \
-              -e PORT=4444 \
-              -e MONGO="${{ secrets.MONGO }}" \
-              -e jwt_secret="${{ secrets.jwt_secret }}" \
-              -e ACCESS_TOKEN="${{ secrets.ACCESS_TOKEN }}" \
-              -e ADMIN_EMAIL="${{ secrets.ADMIN_EMAIL }}" \
-              -e FRONTEND_URL="${{ secrets.FRONTEND_URL }}" \
-              -e AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}" \
-              -e AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
-              -e AWS_REGION="${{ secrets.AWS_REGION }}" \
+              --env-file /home/ubuntu/.env.prod \
               ${{ secrets.DOCKER_USERNAME }}/familytree-app:latest
-
             docker system prune -af
