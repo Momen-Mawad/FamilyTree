@@ -343,7 +343,7 @@ const register = async (req, res) => {
       // Return a clean 500 error to the client
       return res.status(500).json({
         ok: false,
-        message: "Email service authentication failed. Check server logs.",
+        message: `Email service authentication failed: ${error.message}`,
       });
     }
 
