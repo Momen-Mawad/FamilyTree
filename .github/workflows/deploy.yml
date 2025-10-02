@@ -42,7 +42,7 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/familytree-app:latest
             docker stop familytree-container || true
             docker rm familytree-container || true
-            console.log("Using admin email:", ${{ secrets.ADMIN_EMAIL }});
+            console.log("Using admin email:", ${{ secrets.ADMIN_EMAIL }}); || true
             docker run -d \
               --name familytree-container \
               -p 8080:4444 \
@@ -57,3 +57,5 @@ jobs:
               -e ADMIN_EMAIL="${{ secrets.ADMIN_EMAIL }}" \
               -e FRONTEND_URL="${{ secrets.FRONTEND_URL }}" \
               ${{ secrets.DOCKER_USERNAME }}/familytree-app:latest
+
+            docker system prune -af
